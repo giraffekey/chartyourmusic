@@ -12,7 +12,55 @@
   </head>
 
   <body>
+    <div id="container" class="d-flex flex-row">
+      <aside class="col-3">
 
+      </aside>
+  
+      <main class="col-9">
+        <header class="d-flex flex-row justify-content-end py-3">
+          <button class="btn btn-info rounded-0 mr-2">Export</button>
+
+          <!-- Import Button -->
+          <div class="dropdown">
+            <button 
+              class="btn btn-info rounded-0 mr-2 dropdown-toggle"
+              id="dropdownMenuButton"
+              data-toggle="dropdown" 
+              aria-haspopup="true" 
+              aria-expanded="false"
+            >
+              Import
+            </button>   
+            <ul class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuButton">
+              <li class="dropdown-item">...from JSON</li>
+              <li class="dropdown-item">...from RateYourMusic</li>
+            </ul>
+          </div>
+
+          <!-- Download Button -->
+          <div class="dropdown">
+            <button 
+              class="btn btn-success rounded-0 dropdown-toggle"
+              id="dropdownMenuButton"
+              data-toggle="dropdown" 
+              aria-haspopup="true" 
+              aria-expanded="false"
+            >
+              Download
+            </button>   
+            <ul class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuButton">
+              <li class="dropdown-item">...as JPG</li>
+              <li class="dropdown-item">...as PNG</li>
+            </ul>
+          </div>
+        </header>
+
+        <div id="chart">
+
+        </div>
+      </main>
+    </div>
     
     <!-- Libraries -->
     <script
@@ -39,5 +87,4 @@
     <!-- My script(s) -->
     <script src="js/script.js"></script>
   </body>
-
 </html>

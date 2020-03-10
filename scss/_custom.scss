@@ -1,0 +1,17 @@
+/**
+ * Bootstrap class overwrites
+ */
+
+.dropdown-menu {
+    padding: 0;
+}
+
+.dropdown-item {
+    background-color: $primary;
+    color: white;
+    padding: 10px;
+    &:hover {
+        cursor: pointer;
+        background-color: $secondary;
+    }
+}
