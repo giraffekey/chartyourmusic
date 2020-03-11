@@ -7780,16 +7780,7 @@ a.text-dark:hover, a.text-dark:focus {
   min-height: 100vh; }
 
 aside {
-  background-color: green; }
-
-main {
-  background-color: blue; }
-
-#chart {
-  background-color: black;
-  width: 50vw;
-  height: 50vw;
-  margin: 0 auto; }
+  width: 20vw; }
 
 /**
  * Bootstrap class overwrites
@@ -7804,5 +7795,51 @@ main {
   .dropdown-item:hover {
     cursor: pointer;
     background-color: #6c757d; }
+
+/**
+ * Chart styling and classes
+ */
+#chart {
+  background-color: black;
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: center;
+  padding: 25px; }
+
+.tile {
+  padding: 5px; }
+  .tile div {
+    background-color: white;
+    height: 100%; }
+
+.tile-1 {
+  width: 20%; }
+
+.tile-2 {
+  width: 16.66667%; }
+
+.tile-3 {
+  width: 10%; }
+
+#chartList {
+  height: 25vh;
+  overflow: auto; }
+
+.chart-item {
+  height: 50px;
+  background-color: purple;
+  color: white;
+  margin-bottom: 15px;
+  padding: 5px;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center; }
+  .chart-item:last-child {
+    margin-bottom: 0; }
+  .chart-item:hover {
+    cursor: pointer;
+    background-color: darkmagenta; }
 
 /*# sourceMappingURL=index.css.map */

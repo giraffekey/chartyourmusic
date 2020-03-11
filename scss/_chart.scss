@@ -1,0 +1,56 @@
+/**
+ * Chart styling and classes
+ */
+
+#chart {
+    background-color: black;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: center;
+    padding: 25px;
+}
+
+.tile {
+    padding: 5px;
+    div {
+        background-color: white;
+        height: 100%;
+    }
+}
+
+.tile-1 {
+    width: 20%;
+}
+
+.tile-2 {
+    width: (1/6) * 100%;
+}
+
+.tile-3 {
+    width: 10%;
+}
+
+#chartList {
+    height: 25vh;
+    overflow: auto;
+}
+
+.chart-item {
+    height: 50px;
+    background-color: purple;
+    color: white;
+    margin-bottom: 15px;
+    padding: 5px;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    &:last-child {
+        margin-bottom: 0;
+    }
+    &:hover {
+        cursor: pointer;
+        background-color: darkmagenta;
+    }
+}
