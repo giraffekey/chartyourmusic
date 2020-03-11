@@ -11,10 +11,10 @@
     <link rel="stylesheet" type="text/css" href="css/index.css" />
   </head>
 
-  <body class="bg-dark">
+  <body>
     <div id="container" class="d-flex flex-row">
 
-      <aside class="pt-4 pl-4">
+      <aside class="pt-4 pl-4 text-white">
 
         <!-- Chart List -->
         <div id="chartList">
@@ -44,8 +44,10 @@
           </div>
         </div>
 
+        <hr class="hr-border">
+
         <!-- Options -->
-        <p class="text-white mt-4">
+        <p>
           Options
           <a 
             id="optionsArrow"
@@ -55,32 +57,32 @@
             role="button"
             aria-expanded="false"
             aria-controls="collapseOptions"
-            onclick="
-              if($('#optionsArrow').html()==='&#9660;')
-                $('#optionsArrow').html('&#9650;');
-              else
-                $('#optionsArrow').html('&#9660;');
-            "
+            onclick="optionsArrow"
           >&#9660;</a>
         </p>
-        <div class="collapse text-white mb-4" id="collapseOptions">
+        <div class="collapse" id="collapseOptions">
           Whoopee Doopee Dop Doop
         </div>
 
+        <hr class="hr-border">
+
         <!-- Search Engine -->
+        <p>Search:</p>
+        <input type="text" placeholder="Artist" class="w-100 mb-2">
+        <input type="text" placeholder="Album" class="w-100">
 
       </aside>
   
       <main class="p-4 flex-grow-1">
 
-        <header class="d-flex flex-row justify-content-end mb-3">
+        <header class="d-flex flex-row justify-content-end mb-4">
           <!-- Export Button -->
-          <button class="btn btn-info rounded-0 mr-2">Export to JSON</button>
+          <button class="btn btn-light rounded-0 mr-2">Export to JSON</button>
 
           <!-- Import Button -->
           <div class="dropdown">
             <button 
-              class="btn btn-info rounded-0 mr-2 dropdown-toggle"
+              class="btn btn-light rounded-0 mr-2 dropdown-toggle"
               id="dropdownMenuButton"
               data-toggle="dropdown" 
               aria-haspopup="true" 
@@ -97,7 +99,7 @@
           <!-- Download Button -->
           <div class="dropdown">
             <button 
-              class="btn btn-success rounded-0 dropdown-toggle"
+              class="btn btn-light rounded-0 dropdown-toggle"
               id="dropdownMenuButton"
               data-toggle="dropdown" 
               aria-haspopup="true" 

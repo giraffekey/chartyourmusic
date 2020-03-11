@@ -7776,6 +7776,9 @@ a.text-dark:hover, a.text-dark:focus {
 /**
  * Div elements and related
  */
+body {
+  background-color: black; }
+
 #container {
   min-height: 100vh; }
 
@@ -7785,23 +7788,32 @@ aside {
 /**
  * Bootstrap class overwrites
  */
+.hr-border {
+  border: 1px dashed white; }
+
+/**
+ * Bootstrap class overwrites
+ */
 .dropdown-menu {
-  padding: 0; }
+  padding: 0;
+  border-radius: 0;
+  border: 1px solid black; }
 
 .dropdown-item {
-  background-color: #007bff;
-  color: white;
   padding: 10px; }
   .dropdown-item:hover {
     cursor: pointer;
-    background-color: #6c757d; }
+    background-color: black;
+    color: white; }
 
 /**
  * Chart styling and classes
  */
 #chart {
   background-color: black;
-  padding: 25px; }
+  padding: 25px;
+  border: 1px solid white;
+  margin: 0 auto; }
 
 .tile {
   padding: 5px; }
@@ -7824,8 +7836,8 @@ aside {
 
 .chart-item {
   height: 50px;
-  background-color: purple;
-  color: white;
+  background-color: white;
+  color: black;
   margin-bottom: 15px;
   padding: 5px;
   display: flex;
@@ -7836,6 +7848,6 @@ aside {
     margin-bottom: 0; }
   .chart-item:hover {
     cursor: pointer;
-    background-color: darkmagenta; }
+    color: gray; }
 
 /*# sourceMappingURL=index.css.map */

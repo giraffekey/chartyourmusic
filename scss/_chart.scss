@@ -5,6 +5,8 @@
 #chart {
     background-color: black;
     padding: 25px;
+    border: 1px solid white;
+    margin: 0 auto;
 }
 
 .tile {
@@ -34,8 +36,8 @@
 
 .chart-item {
     height: 50px;
-    background-color: purple;
-    color: white;
+    background-color: white;
+    color: black;
     margin-bottom: 15px;
     padding: 5px;
     display: flex;
@@ -47,6 +49,6 @@
     }
     &:hover {
         cursor: pointer;
-        background-color: darkmagenta;
+        color: gray;
     }
 }
