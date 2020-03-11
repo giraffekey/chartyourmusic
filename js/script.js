@@ -6,7 +6,7 @@ ChartYourMusic
 
 function resizeTiles() {
     $('.tile').each((i, tile) => {
-        tile.style.height = tile.offsetWidth+'px';
+        tile.style.height = tile.borderWidth+'px';
     });
 }
 

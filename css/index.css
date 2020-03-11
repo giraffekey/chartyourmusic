@@ -7801,17 +7801,10 @@ aside {
  */
 #chart {
   background-color: black;
-  display: flex;
-  flex-direction: row;
-  flex-wrap: wrap;
-  justify-content: center;
   padding: 25px; }
 
 .tile {
   padding: 5px; }
-  .tile div {
-    background-color: white;
-    height: 100%; }
 
 .tile-1 {
   width: 20%; }
@@ -7822,8 +7815,11 @@ aside {
 .tile-3 {
   width: 10%; }
 
+.tile-4 {
+  width: 7.14286%; }
+
 #chartList {
-  height: 25vh;
+  height: 30vh;
   overflow: auto; }
 
 .chart-item {

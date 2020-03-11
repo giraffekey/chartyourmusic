@@ -4,19 +4,11 @@
 
 #chart {
     background-color: black;
-    display: flex;
-    flex-direction: row;
-    flex-wrap: wrap;
-    justify-content: center;
     padding: 25px;
 }
 
 .tile {
     padding: 5px;
-    div {
-        background-color: white;
-        height: 100%;
-    }
 }
 
 .tile-1 {
@@ -31,8 +23,12 @@
     width: 10%;
 }
 
+.tile-4 {
+    width: (1/14) * 100%;
+}
+
 #chartList {
-    height: 25vh;
+    height: 30vh;
     overflow: auto;
 }
 
