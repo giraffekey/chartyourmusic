@@ -54,10 +54,33 @@ function getAlbums() {
                 const images = JSON.parse(resp).images;
                 for(let i = 0; i < images.length; i++) {
                     $('#results').append(`
-                        <img src="${images[i]['image']}">
-                    `);
+                        <img class="ui-draggable" src="${images[i]['image']}">
+                    `)
+                    $(".ui-draggable").draggable({
+                      containment: "document",
+                      scroll: false,
+                      stack: "img.ui-draggable"
+                    })
+                    .mousedown(function () {
+                      let stack = $( ".ui-draggable" ).draggable( "option", "stack" )
+                      $( ".ui-draggable" ).draggable( "option", "stack", "img.ui-draggable" );
+                    });
                 }
             });
         }
     });
 }
+
+// **Add a trigger
+// function checkSelected() {
+//   console.log("1");
+//   $('img').mousedown(function () {
+//     console.log("2");
+//     $('#results').draggable();
+//     $('#results').droppable({
+//       drop: '#chart'
+//     });
+//   });
+// }
+
+// https://stackoverflow.com/questions/5941631/compile-save-export-html-as-a-png-image-using-jquery
