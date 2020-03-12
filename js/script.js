@@ -32,6 +32,14 @@ function fetch(url, ready) {
     http.send();
 }
 
+function checkEnter() {
+  $('#album').on('keypress', function(e) {
+      if (e.which === 13) {
+          getAlbums();
+      }
+  });
+}
+
 function getAlbums() {
     let artist = $('#artist').val();
     let album = $('#album').val();

@@ -49,7 +49,7 @@
         <!-- Options -->
         <p>
           Options
-          <a 
+          <a
             id="optionsArrow"
             class="text-white text-decoration-none"
             data-toggle="collapse"
@@ -72,13 +72,13 @@
           <button class="btn btn-light btn-sm" onclick="getAlbums()">Submit</button>
         </div>
         <div class="d-flex flex-row mb-3">
-          <input id="artist" type="text" placeholder="Artist" class="w-50">
-          <input id="album" type="text" placeholder="Album" class="w-50">
+          <input id="artist" type="text" placeholder="Artist" class="w-50" onfocus="checkEnter()">
+          <input id="album" type="text" placeholder="Album" class="w-50" onfocus="checkEnter()">
         </div>
         <div id="results" class="d-flex flex-row flex-wrap overflow-auto"></div>
 
       </aside>
-  
+
       <main class="p-4 flex-grow-1">
 
         <header class="d-flex flex-row justify-content-end mb-4">
@@ -87,15 +87,15 @@
 
           <!-- Import Button -->
           <div class="dropdown">
-            <button 
+            <button
               class="btn btn-light rounded-0 mr-2 dropdown-toggle"
               id="dropdownMenuButton"
-              data-toggle="dropdown" 
-              aria-haspopup="true" 
+              data-toggle="dropdown"
+              aria-haspopup="true"
               aria-expanded="false"
             >
               Import
-            </button>   
+            </button>
             <ul class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuButton">
               <li class="dropdown-item">...from JSON</li>
               <li class="dropdown-item">...from RateYourMusic</li>
@@ -104,15 +104,15 @@
 
           <!-- Download Button -->
           <div class="dropdown">
-            <button 
+            <button
               class="btn btn-light rounded-0 dropdown-toggle"
               id="dropdownMenuButton"
-              data-toggle="dropdown" 
-              aria-haspopup="true" 
+              data-toggle="dropdown"
+              aria-haspopup="true"
               aria-expanded="false"
             >
               Download
-            </button>   
+            </button>
             <ul class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuButton">
               <li class="dropdown-item">...as JPG</li>
               <li class="dropdown-item">...as PNG</li>
@@ -168,7 +168,7 @@
 
       </main>
     </div>
-    
+
     <!-- Libraries -->
     <script
       src="https://code.jquery.com/jquery-3.3.1.min.js"
@@ -180,14 +180,14 @@
       integrity="sha256-VazP97ZCwtekAsvgPBSUwPFKdrwD3unUfSGVYrahUqU="
       crossorigin="anonymous"
     ></script>
-    <script 
-      src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" 
-      integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" 
+    <script
+      src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"
+      integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo"
       crossorigin="anonymous"
     ></script>
-    <script 
-      src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" 
-      integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" 
+    <script
+      src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"
+      integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6"
       crossorigin="anonymous"
     ></script>
 
