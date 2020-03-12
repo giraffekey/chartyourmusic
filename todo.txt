@@ -1,0 +1,8 @@
+- Draggable tiles/rearranging tiles
+- Improved search fields
+- Options that dynamically update tiles and chart
+- Chart list functionality
+- Exporting to image
+- Exporting/importing JSON
+- Importing RYM data
+- Chart album titles and title editing
