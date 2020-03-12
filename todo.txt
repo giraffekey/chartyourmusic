@@ -5,4 +5,4 @@
 - Exporting to image
 - Exporting/importing JSON
 - Importing RYM data
-- Chart album titles and title editing
+- Chart album titles and title editing (yee)
