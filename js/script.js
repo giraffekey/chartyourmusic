@@ -6,10 +6,10 @@ ChartYourMusic
 
 function optionsArrow() {
     let arrow = $('#optionsArrow');
-    if(arrow.html()==='▼')
-        arrow.html('▲');
+    if(arrow.html()==='Options ▼')
+        arrow.html('Options ▲');
     else
-        arrow.html('▼');
+        arrow.html('Options ▼');
 }
 
 function resize() {
@@ -53,3 +53,12 @@ function getAlbums() {
         }
     });
 }
+
+function getAlbumsEnter(e) {
+    if(e.key === 'Enter') {
+        getAlbums();
+    }
+}
+
+$('#artist').keypress(getAlbumsEnter);
+$('#album').keypress(getAlbumsEnter);
