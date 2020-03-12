@@ -1,0 +1,26 @@
+/**
+ * Elements and classes
+ */
+
+body {
+    background-color: black;
+}
+
+#container {
+    min-height: 100vh;
+}
+
+aside {
+    width: 25vw;
+}
+
+.hr-border {
+    border: 1px dashed white;
+}
+
+#results {
+    max-height: 40vh;
+    img {
+        width: 50%;
+    }
+}

@@ -7774,7 +7774,7 @@ a.text-dark:hover, a.text-dark:focus {
     color: inherit;
     border-color: #dee2e6; } }
 /**
- * Div elements and related
+ * Elements and classes
  */
 body {
   background-color: black; }
@@ -7783,13 +7783,15 @@ body {
   min-height: 100vh; }
 
 aside {
-  width: 20vw; }
+  width: 25vw; }
 
-/**
- * Bootstrap class overwrites
- */
 .hr-border {
   border: 1px dashed white; }
+
+#results {
+  max-height: 40vh; }
+  #results img {
+    width: 50%; }
 
 /**
  * Bootstrap class overwrites
@@ -7831,8 +7833,7 @@ aside {
   width: 7.14286%; }
 
 #chartList {
-  height: 30vh;
-  overflow: auto; }
+  height: 25vh; }
 
 .chart-item {
   height: 50px;

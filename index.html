@@ -17,7 +17,7 @@
       <aside class="pt-4 pl-4 text-white">
 
         <!-- Chart List -->
-        <div id="chartList">
+        <div id="chartList" class="overflow-auto">
           <div class="chart-item">
             <span>Fart Chart</span>
           </div>
@@ -57,7 +57,7 @@
             role="button"
             aria-expanded="false"
             aria-controls="collapseOptions"
-            onclick="optionsArrow"
+            onclick="optionsArrow()"
           >&#9660;</a>
         </p>
         <div class="collapse" id="collapseOptions">
@@ -67,9 +67,15 @@
         <hr class="hr-border">
 
         <!-- Search Engine -->
-        <p>Search:</p>
-        <input type="text" placeholder="Artist" class="w-100 mb-2">
-        <input type="text" placeholder="Album" class="w-100">
+        <div class="d-flex flex-row justify-content-between align-items-center mb-2">
+          <span>Album Search:</span>
+          <button class="btn btn-light btn-sm" onclick="getAlbums()">Submit</button>
+        </div>
+        <div class="d-flex flex-row mb-3">
+          <input id="artist" type="text" placeholder="Artist" class="w-50">
+          <input id="album" type="text" placeholder="Album" class="w-50">
+        </div>
+        <div id="results" class="d-flex flex-row flex-wrap overflow-auto"></div>
 
       </aside>
   
