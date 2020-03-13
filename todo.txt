@@ -1,8 +1,8 @@
-- Rearranging tiles after drag (giraffe)
+- Fixing the couple issues tile drag has (giraffe)
 - Improved search fields
 - Options that dynamically update tiles and chart (giraffe)
 - Chart list functionality
-- Exporting to image (giraffe)
+- Figuring out how to export external images (giraffe)
 - Exporting/importing JSON
 - Importing RYM data
 - Chart album titles and title editing (yee)
