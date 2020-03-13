@@ -41,39 +41,72 @@ function checkEnter() {
 }
 
 function getAlbums() {
-    let artist = $('#artist').val();
-    let album = $('#album').val();
-    $('#results').html('');
-    fetch(`https://musicbrainz.org/ws/2/release?query=${album}&limit=5?inc=artist-credit&fmt=json`,
-    (resp) => {
-      const releases = JSON.parse(resp).releases;
-      for (let i = 0; i < releases.length; i++) {
-        fetch('https://coverartarchive.org/release/' + releases[i]['id'],
-          (resp) => {
-            const images = JSON.parse(resp).images;
-            for (let i = 0; i < images.length; i++) {
-                let img = document.createElement('img');
-                img.src = images[i]['image'];
-                $(img).draggable({
-                    appendTo: 'body',
-                    zIndex: 10,
-                    helper: 'clone',
-                    start: (e, ui) => {
-                        $(ui.helper).css({'width': $('#results').width() / 2});
-                    }
-                });
-                $('#results').append(img);
-            }
-        });
-      }
-    });
+  let artist = $('#artist').val();
+  let album = $('#album').val();
+  $('#results').html('');
+  fetch(`https://musicbrainz.org/ws/2/release?query=${album}&limit=5?inc=artist-credit&fmt=json`,
+  (resp) => {
+    const releases = JSON.parse(resp).releases;
+    for (let i = 0; i < releases.length; i++) {
+      fetch('https://coverartarchive.org/release/' + releases[i]['id'],
+        (resp) => {
+          const images = JSON.parse(resp).images;
+          for (let i = 0; i < images.length; i++) {
+            let img = document.createElement('img');
+            img.src = images[i]['image'];
+            img.className = 'result';
+            $(img).draggable({
+              appendTo: 'body',
+              zIndex: 10,
+              helper: 'clone',
+              start: (e, ui) => {
+                let size = $('#results').width() / 2;
+                $(ui.helper).css({width: size, height: size});
+              }
+            });
+            $('#results').append(img);
+            img.style.height = img.borderWidth + 'px';
+          }
+      });
+    }
+  });
 }
 
 $('.tile').droppable({
-    accept: '.ui-draggable',
-    drop: (e, ui) => {
-        e.target.src = $(ui.draggable).attr('src');
-    }
+  accept: '.ui-draggable',
+  drop: (e, ui) => {
+    if($(ui.draggable).hasClass('result'))
+      e.target.src = $(ui.draggable).attr('src');
+    else if($(ui.draggable).hasClass('tile'))
+      e.target.style.opacity = 1;
+      //rearrange everything
+  },
+  over: (e, ui) => {
+    if($(ui.draggable).hasClass('tile'))
+      e.target.style.opacity = 0;
+  },
+  out: (e, ui) => {
+    if($(ui.draggable).hasClass('tile'))
+      e.target.style.opacity = 1;
+  }
+});
+
+$('.tile').draggable({
+  zIndex: 10,
+  helper: 'clone',
+  start: (e, ui) => {
+    let width = $('#chart').width();
+    let target = $(e.target);
+    let helper = $(ui.helper);
+    if(target.hasClass('tile-1'))
+      helper.css({width: width / 5});
+    else if(target.hasClass('tile-2'))
+      helper.css({width: width / 6});
+    else if(target.hasClass('tile-3'))
+      helper.css({width: width / 10});
+    else if(target.hasClass('tile-4'))
+      helper.css({width: width / 14});
+  }
 });
 
 function chartToImage(ext) {

@@ -1,6 +1,6 @@
-- Draggable tiles/rearranging tiles
+- Rearranging tiles after drag (giraffe)
 - Improved search fields
-- Options that dynamically update tiles and chart
+- Options that dynamically update tiles and chart (giraffe)
 - Chart list functionality
 - Exporting to image (giraffe)
 - Exporting/importing JSON
