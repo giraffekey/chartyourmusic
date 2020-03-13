@@ -4,10 +4,16 @@ ChartYourMusic
 
 ******************/
 
-let chart = [0, 0, 0, 0, 0, 0, 0, 0, 0];
+let sources = [];
+for(let i = 0; i < 9; i++) {
+  sources.push("assets/images/blank.png");
+}
+
 let options = {
   grid: false
 };
+
+let dragIndex = -1;
 
 function optionsArrow() {
   let arrow = $('#optionsArrow');
@@ -22,9 +28,6 @@ function resize() {
     img.style.height = img.borderWidth + 'px';
   });
 }
-
-resize();
-window.onresize = resize;
 
 function fetch(url, ready) {
   let http = new XMLHttpRequest();
@@ -88,9 +91,16 @@ function chartToImage(ext) {
   );
 }
 
+function repaintChart() {
+  let images = $('#chart img');
+  for(let i = 0; i < images.length; i++) {
+    images.get(i).src = sources[i];
+  }
+}
+
 function generateChart() {
-  let images = '';
-  for(let i = 0; i < chart.length; i++) {
+  let innerHTML = '';
+  for(let i = 0; i < sources.length; i++) {
     let tile_n = 'tile-1';
     if(!options.grid) {
       if(i >= 52) tile_n = 'tile-4';
@@ -98,26 +108,36 @@ function generateChart() {
       else if(i >= 10) tile_n = 'tile-2';
     }
 
-    images += `
-      <img class="tile ${tile_n}" src=${chart[i] ? chart[i] : 'assets/images/blank.png'}>
+    innerHTML += `
+      <img class="tile ${tile_n}" src="${sources[i]}">
     `;
   }
 
-  $('#chart').html(images);
+  $('#chart').html(innerHTML);
 
   $('.tile').droppable({
     accept: '.ui-draggable',
     drop: (e, ui) => {
+      let images = $('#chart img');
       if($(ui.draggable).hasClass('result')) {
-        chart[$('#chart img').index(e.target)] = $(ui.draggable).attr('src');      
-        generateChart();
+        sources[images.index(e.target)] = $(ui.draggable).attr('src');      
+        repaintChart();
       } else if($(ui.draggable).hasClass('tile')) {
         e.target.style.opacity = 1;
+        dragIndex = -1;
       }
     },
     over: (e, ui) => {
-      if($(ui.draggable).hasClass('tile'))
+      let images = $('#chart img');
+      if($(ui.draggable).hasClass('tile')) {
+        if(dragIndex === -1) dragIndex = images.index(ui.draggable);
+        let src = sources.splice(dragIndex, 1);
+        sources.splice(images.index(e.target), 0, src);
+        dragIndex = images.index(e.target);
+        repaintChart();
+        $(ui.helper).attr('src', src);
         e.target.style.opacity = 0;
+      }
     },
     out: (e, ui) => {
       if($(ui.draggable).hasClass('tile'))
@@ -144,4 +164,6 @@ function generateChart() {
   });
 }
 
+window.onresize = resize;
 generateChart();
+resize();
