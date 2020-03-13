@@ -76,4 +76,15 @@ $('.tile').droppable({
     }
 });
 
+function chartToImage(ext) {
+  html2canvas(document.getElementById('chart')).then(
+    (canvas) => {
+      if(ext === 'jpg')
+        Canvas2Image.saveAsJPEG(canvas);
+      else if(ext === 'png')
+        Canvas2Image.saveAsPNG(canvas);
+    }
+  );
+}
+
 // https://stackoverflow.com/questions/5941631/compile-save-export-html-as-a-png-image-using-jquery

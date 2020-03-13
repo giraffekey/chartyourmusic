@@ -113,8 +113,8 @@
               Download
             </button>
             <ul class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuButton">
-              <li class="dropdown-item">...as JPG</li>
-              <li class="dropdown-item">...as PNG</li>
+              <li class="dropdown-item" onclick="chartToImage('jpg')">...as JPG</li>
+              <li class="dropdown-item" onclick="chartToImage('png')">...as PNG</li>
             </ul>
           </div>
 
@@ -189,6 +189,8 @@
       integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6"
       crossorigin="anonymous"
     ></script>
+    <script src="js/html2canvas.min.js"></script>
+    <script src="js/canvas2image.js"></script>
 
     <!-- My script(s) -->
     <script src="js/script.js"></script>

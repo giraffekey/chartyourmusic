@@ -6,3 +6,4 @@
 - Exporting/importing JSON
 - Importing RYM data
 - Chart album titles and title editing
+- Mobile friendliness
