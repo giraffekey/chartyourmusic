@@ -4,6 +4,8 @@ ChartYourMusic
 
 ******************/
 
+let chart = [0, 0, 0, 0, 0, 0, 0, 0, 0]
+
 function optionsArrow() {
   let arrow = $('#optionsArrow');
   if (arrow.html() === 'Options ▼')
@@ -72,43 +74,6 @@ function getAlbums() {
   });
 }
 
-$('.tile').droppable({
-  accept: '.ui-draggable',
-  drop: (e, ui) => {
-    if($(ui.draggable).hasClass('result'))
-      e.target.src = $(ui.draggable).attr('src');
-    else if($(ui.draggable).hasClass('tile'))
-      e.target.style.opacity = 1;
-      //rearrange everything
-  },
-  over: (e, ui) => {
-    if($(ui.draggable).hasClass('tile'))
-      e.target.style.opacity = 0;
-  },
-  out: (e, ui) => {
-    if($(ui.draggable).hasClass('tile'))
-      e.target.style.opacity = 1;
-  }
-});
-
-$('.tile').draggable({
-  zIndex: 10,
-  helper: 'clone',
-  start: (e, ui) => {
-    let width = $('#chart').width();
-    let target = $(e.target);
-    let helper = $(ui.helper);
-    if(target.hasClass('tile-1'))
-      helper.css({width: width / 5});
-    else if(target.hasClass('tile-2'))
-      helper.css({width: width / 6});
-    else if(target.hasClass('tile-3'))
-      helper.css({width: width / 10});
-    else if(target.hasClass('tile-4'))
-      helper.css({width: width / 14});
-  }
-});
-
 function chartToImage(ext) {
   html2canvas(document.getElementById('chart')).then(
     (canvas) => {
@@ -120,4 +85,53 @@ function chartToImage(ext) {
   );
 }
 
-// https://stackoverflow.com/questions/5941631/compile-save-export-html-as-a-png-image-using-jquery
+function generateChart() {
+  let images = '';
+  for(let i = 0; i < chart.length; i++) {
+    images += `
+      <img class="tile tile-1" src=${chart[i] ? chart[i] : 'assets/images/blank.png'}>
+    `;
+  }
+
+  $('#chart').html(images);
+
+  $('.tile').droppable({
+    accept: '.ui-draggable',
+    drop: (e, ui) => {
+      if($(ui.draggable).hasClass('result')) {
+        chart[$('#chart img').index(e.target)] = $(ui.draggable).attr('src');      
+        generateChart();
+      } else if($(ui.draggable).hasClass('tile')) {
+        e.target.style.opacity = 1;
+      }
+    },
+    over: (e, ui) => {
+      if($(ui.draggable).hasClass('tile'))
+        e.target.style.opacity = 0;
+    },
+    out: (e, ui) => {
+      if($(ui.draggable).hasClass('tile'))
+        e.target.style.opacity = 1;
+    }
+  });
+
+  $('.tile').draggable({
+    zIndex: 10,
+    helper: 'clone',
+    start: (e, ui) => {
+      let width = $('#chart').width();
+      let target = $(e.target);
+      let helper = $(ui.helper);
+      if(target.hasClass('tile-1'))
+        helper.css({width: width / 5});
+      else if(target.hasClass('tile-2'))
+        helper.css({width: width / 6});
+      else if(target.hasClass('tile-3'))
+        helper.css({width: width / 10});
+      else if(target.hasClass('tile-4'))
+        helper.css({width: width / 14});
+    }
+  });
+}
+
+generateChart();
