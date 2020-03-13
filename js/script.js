@@ -4,7 +4,10 @@ ChartYourMusic
 
 ******************/
 
-let chart = [0, 0, 0, 0, 0, 0, 0, 0, 0]
+let chart = [0, 0, 0, 0, 0, 0, 0, 0, 0];
+let options = {
+  grid: false
+};
 
 function optionsArrow() {
   let arrow = $('#optionsArrow');
@@ -88,8 +91,15 @@ function chartToImage(ext) {
 function generateChart() {
   let images = '';
   for(let i = 0; i < chart.length; i++) {
+    let tile_n = 'tile-1';
+    if(!options.grid) {
+      if(i >= 52) tile_n = 'tile-4';
+      else if(i >= 22) tile_n = 'tile-3';
+      else if(i >= 10) tile_n = 'tile-2';
+    }
+
     images += `
-      <img class="tile tile-1" src=${chart[i] ? chart[i] : 'assets/images/blank.png'}>
+      <img class="tile ${tile_n}" src=${chart[i] ? chart[i] : 'assets/images/blank.png'}>
     `;
   }
 
