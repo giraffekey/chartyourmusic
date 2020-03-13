@@ -78,7 +78,7 @@ function getAlbums() {
 }
 
 function chartToImage(ext) {
-  html2canvas(document.getElementById('chart')).then(
+  html2canvas(document.getElementById('chart'), {allowTaint: true}).then(
     (canvas) => {
       if(ext === 'jpg')
         Canvas2Image.saveAsJPEG(canvas);
