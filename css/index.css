@@ -7792,7 +7792,7 @@ main {
   border: 1px dashed white; }
 
 #results {
-  max-height: 40vh; }
+  flex-basis: 10px; }
   #results img {
     width: 50%; }
 
@@ -7816,7 +7816,6 @@ main {
  */
 #chart {
   background-color: black;
-  padding: 20px;
   border: 1px solid white;
   margin: 0 auto; }
 
@@ -7840,7 +7839,6 @@ main {
   background-color: white;
   color: black;
   margin-bottom: 15px;
-  padding: 5px;
   display: flex;
   flex-direction: row;
   justify-content: space-between;
@@ -7854,5 +7852,10 @@ main {
 /**
  * The options section
  */
+#options {
+  font-size: 0.9em; }
+
+#tiles {
+  width: 60px; }
 
 /*# sourceMappingURL=index.css.map */

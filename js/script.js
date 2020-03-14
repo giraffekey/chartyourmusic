@@ -246,8 +246,16 @@ function importFromRYM() {
   }
 }
 
-window.onresize = resize;
-$('#chartSize').hide();
-$('#rowsNum').html($('#rows').val());
-$('#colsNum').html($('#cols').val());
-generateChart();
+$(() => {
+  $('#chartSize').hide();
+  $('#rowsNum').html($('#rows').val());
+  $('#colsNum').html($('#cols').val());
+
+  $("#csvInput").hide();
+
+  generateChart();
+  window.onresize = resize;
+
+  outerPadding();
+  innerPadding();
+})
