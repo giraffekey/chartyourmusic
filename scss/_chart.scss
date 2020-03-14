@@ -8,10 +8,6 @@
     margin: 0 auto;
 }
 
-.tile {
-    padding: 5px;
-}
-
 .tile-2 {
     width: 100% * (1/6);
 }
@@ -33,6 +29,7 @@
     background-color: white;
     color: black;
     margin-bottom: 15px;
+    padding: 20px;
     display: flex;
     flex-direction: row;
     justify-content: space-between;

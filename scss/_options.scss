@@ -4,8 +4,16 @@
 
 #options {
     font-size: 0.9em;
+    td {
+        padding-right: 4px;
+    }
 }
 
 #tiles {
     width: 60px;
+}
+
+input[type=radio] {
+    position: relative;
+    top: 3px;
 }

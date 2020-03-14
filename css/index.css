@@ -7819,9 +7819,6 @@ main {
   border: 1px solid white;
   margin: 0 auto; }
 
-.tile {
-  padding: 5px; }
-
 .tile-2 {
   width: 16.66667%; }
 
@@ -7839,6 +7836,7 @@ main {
   background-color: white;
   color: black;
   margin-bottom: 15px;
+  padding: 20px;
   display: flex;
   flex-direction: row;
   justify-content: space-between;
@@ -7854,8 +7852,14 @@ main {
  */
 #options {
   font-size: 0.9em; }
+  #options td {
+    padding-right: 4px; }
 
 #tiles {
   width: 60px; }
+
+input[type=radio] {
+  position: relative;
+  top: 3px; }
 
 /*# sourceMappingURL=index.css.map */

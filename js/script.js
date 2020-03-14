@@ -185,6 +185,8 @@ function generateChart() {
   });
 
   resize();
+  outerPadding();
+  innerPadding();
 }
 
 function chartType(grid) {
@@ -266,7 +268,4 @@ $(() => {
 
   generateChart();
   window.onresize = resize;
-
-  outerPadding();
-  innerPadding();
 })
