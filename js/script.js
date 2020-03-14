@@ -231,27 +231,27 @@ function innerPadding() {
 }
 
 function importFromRYM() {
-  if ($('#csvImport').is(":hidden")) {
+  if ($('#csvImport').is(':hidden')) {
     $('#csvImport').show();
     $('#csvImport').dialog({
       draggable: false,
       modal: true,
       resizable: false,
-      title: "RYM Import Data:"
+      title: 'RYM Import Data:'
     });
     
-    let userUpload = $('input#csvImport').val();
-    console.log(userUpload);
+    $('#csvImport').change(() => {
+      let userUpload = URL.createObjectURL(document.getElementById('csvImport').files[0]);
 
-    let userData;
-    $.ajax({
-      type: "GET",  
-      url: userUpload,
-      dataType: 'text',  
-      success: function (response) {
-        userData = $.csv.toArray(response);
-        console.log(userData);
-      }
+      $.ajax({
+        type: 'GET',
+        url: userUpload,
+        dataType: 'text',
+        success: function (response) {
+          let userData = $.csv.toArray(response);
+          console.log(userData);
+        }
+      });
     });
   }
   else {
