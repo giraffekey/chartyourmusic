@@ -216,26 +216,34 @@ function chartLength() {
   generateChart();
 }
 
-$("#csvInput").hide();
-
+$('#csvImport').hide();
 function importFromRYM() {
-  $("#csvInput").show();
-  $("#csvInput").dialog({
-    draggable: false,
-    modal: true,
-    resizable: false,
-    title: "RYM Import Data:"
-  });
-  
-  let userData = $('#userData').get();
-  $.ajax({
-    type: "GET",  
-    url: userData,
-    dataType : 'text',  
-    success: function (response) {
-      userData = $.csv.toArrays(response);
-    }   
-  });
+  if ($('#csvImport').is(":hidden")) {
+    $('#csvImport').show();
+    $('#csvImport').dialog({
+      draggable: false,
+      modal: true,
+      resizable: false,
+      title: "RYM Import Data:"
+    });
+    
+    let userUpload = $('input#csvImport').val();
+    console.log(userUpload);
+
+    let userData
+    $.ajax({
+      type: "GET",  
+      url: userUpload,
+      dataType : 'text',  
+      success: function (response) {
+        userData = $.csv.toArray(response);
+      }
+    });
+    console.log(userData);
+  }
+  else {
+    $('#csvImport').hide();
+  }
 }
 
 window.onresize = resize;
