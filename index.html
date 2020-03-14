@@ -14,7 +14,7 @@
   <body>
     <div id="container" class="d-flex flex-row">
 
-      <aside class="pt-4 pl-4 text-white">
+      <aside class="d-flex flex-column py-4 pl-4 text-white">
 
         <!-- Chart List -->
         <div id="chartList" class="overflow-auto">
@@ -44,7 +44,7 @@
           </div>
         </div>
 
-        <hr class="hr-border">
+        <hr class="hr-border w-100">
 
         <!-- Options -->
         <p>
@@ -52,14 +52,14 @@
             id="optionsArrow"
             class="text-white text-decoration-none"
             data-toggle="collapse"
-            href="#collapseOptions"
+            href="#options"
             role="button"
             aria-expanded="false"
-            aria-controls="collapseOptions"
+            aria-controls="options"
             onclick="optionsArrow()"
           >Options &#9660;</a>
         </p>
-        <section class="collapse" id="collapseOptions">
+        <section class="collapse" id="options">
           <label for="gridRadio">Grid</label>
           <input type="radio" id="gridRadio" name="chartType" onclick="chartType(true)">
           <label for="collageRadio">Collage</label>
@@ -81,9 +81,21 @@
             <label for="tiles">Tiles</label>
             <input type="number" id="tiles" value="40" min="1" max="144" onchange="chartLength()">
           </div>
+          <table>
+            <tr>
+              <td><label for="outerPadding">Outer Padding</label></td>
+              <td><input type="range" id="outerPadding" value="10" min="0" max="30" oninput="outerPadding()"></td>
+              <td id="outerPaddingNum"></td>
+            </tr>
+            <tr>
+              <td><label for="innerPadding">Inner Padding</label></td>
+              <td><input type="range" id="innerPadding" value="4" min="0" max="20" oninput="innerPadding()"></td>
+              <td id="innerPaddingNum"></td>
+            </tr>
+          </table>
         </section>
 
-        <hr class="hr-border">
+        <hr class="hr-border w-100">
 
         <!-- Search Engine -->
         <div class="d-flex flex-row justify-content-between align-items-center mb-2">
@@ -94,7 +106,10 @@
           <input id="artist" type="text" placeholder="Artist" class="w-50" onfocus="checkEnter()">
           <input id="album" type="text" placeholder="Album" class="w-50" onfocus="checkEnter()">
         </div>
-        <div id="results" class="d-flex flex-row flex-wrap overflow-auto"></div>
+        <div 
+          id="results" 
+          class="d-flex flex-row flex-wrap flex-grow-1 flex-shrink-1 overflow-auto"
+        ></div>
 
       </aside>
 
@@ -169,7 +184,6 @@
     ></script>
     <script src="js/html2canvas.min.js"></script>
     <script src="js/canvas2image.min.js"></script>
-
     <script src="js/jquery-csv.js" type="text/html"></script>
 
     <!-- My script(s) -->

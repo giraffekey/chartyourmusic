@@ -216,7 +216,17 @@ function chartLength() {
   generateChart();
 }
 
-$("#csvInput").hide();
+function outerPadding() {
+  let padding = $('#outerPadding').val()
+  $('#chart').css({padding: padding * 2});
+  $('#outerPaddingNum').html(padding);
+}
+
+function innerPadding() {
+  let padding = $('#innerPadding').val();
+  $('#chart img').css({padding: padding});
+  $('#innerPaddingNum').html(padding);
+}
 
 function importFromRYM() {
   $("#csvInput").show();
@@ -231,15 +241,23 @@ function importFromRYM() {
   $.ajax({
     type: "GET",  
     url: userData,
-    dataType : 'text',  
+    dataType : 'text',
     success: function (response) {
       userData = $.csv.toArrays(response);
-    }   
+    }
   });
 }
 
-window.onresize = resize;
-$('#chartSize').hide();
-$('#rowsNum').html($('#rows').val());
-$('#colsNum').html($('#cols').val());
-generateChart();
+$(() => {
+  $('#chartSize').hide();
+  $('#rowsNum').html($('#rows').val());
+  $('#colsNum').html($('#cols').val());
+
+  $("#csvInput").hide();
+
+  generateChart();
+  window.onresize = resize;
+
+  outerPadding();
+  innerPadding();
+})
