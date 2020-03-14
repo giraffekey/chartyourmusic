@@ -3,7 +3,7 @@
 - Options that dynamically update tiles and chart (giraffe)
 - Chart list functionality
 - Figuring out how to export external images (giraffe)
-- Exporting/importing JSON
-- Importing RYM data
-- Chart album titles and title editing (yee)
+- Exporting/importing JSON (yee)
+- Importing RYM data (yee)
+- Chart album titles and title editing 
 - Mobile friendliness

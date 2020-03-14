@@ -180,6 +180,28 @@ function generateChart() {
   });
 }
 
+$("#csvInput").hide();
+
+function importFromRYM() {
+  $("#csvInput").show();
+  $("#csvInput").dialog({
+    draggable: false,
+    modal: true,
+    resizable: false,
+    title: "RYM Import Data:"
+  });
+  
+  let userData = $('#userData').get();
+  $.ajax({
+    type: "GET",  
+    url: userData,
+    dataType : 'text',  
+    success: function (response) {
+      userData = $.csv.toArrays(response);
+    }   
+  });
+}
+
 window.onresize = resize;
 generateChart();
 resize();
