@@ -216,7 +216,18 @@ function chartLength() {
   generateChart();
 }
 
-$('#csvImport').hide();
+function outerPadding() {
+  let padding = $('#outerPadding').val()
+  $('#chart').css({padding: padding * 2});
+  $('#outerPaddingNum').html(padding);
+}
+
+function innerPadding() {
+  let padding = $('#innerPadding').val();
+  $('#chart img').css({padding: padding});
+  $('#innerPaddingNum').html(padding);
+}
+
 function importFromRYM() {
   if ($('#csvImport').is(":hidden")) {
     $('#csvImport').show();
@@ -251,7 +262,7 @@ $(() => {
   $('#rowsNum').html($('#rows').val());
   $('#colsNum').html($('#cols').val());
 
-  $("#csvInput").hide();
+  $("#csvImport").hide();
 
   generateChart();
   window.onresize = resize;
