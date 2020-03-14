@@ -243,16 +243,16 @@ function importFromRYM() {
     let userUpload = $('input#csvImport').val();
     console.log(userUpload);
 
-    let userData
+    let userData;
     $.ajax({
       type: "GET",  
       url: userUpload,
-      dataType : 'text',  
+      dataType: 'text',  
       success: function (response) {
         userData = $.csv.toArray(response);
+        console.log(userData);
       }
     });
-    console.log(userData);
   }
   else {
     $('#csvImport').hide();
