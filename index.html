@@ -59,9 +59,29 @@
             onclick="optionsArrow()"
           >Options &#9660;</a>
         </p>
-        <div class="collapse" id="collapseOptions">
-          Whoopee Doopee Dop Doop
-        </div>
+        <section class="collapse" id="collapseOptions">
+          <label for="gridRadio">Grid</label>
+          <input type="radio" id="gridRadio" name="chartType" onclick="chartType(true)">
+          <label for="collageRadio">Collage</label>
+          <input type="radio" id="collageRadio" name="chartType" selected onclick="chartType(false)">
+          <br>
+          <table id="chartSize">
+            <tr>
+              <td><label for="rows">Rows</label></td>
+              <td><input type="range" id="rows" min="1" max="12" value="3" oninput="chartSize()"></td>
+              <td id="rowsNum"></td>
+            </tr>
+            <tr>
+              <td><label for="cols">Cols</label></td>
+              <td><input type="range" id="cols" min="1" max="12" value="3" oninput="chartSize()"></td>
+              <td id="colsNum"></td>
+            </tr>
+          </table>
+          <div id="chartLength">
+            <label for="tiles">Tiles</label>
+            <input type="number" id="tiles" value="40" min="1" max="144" onchange="chartLength()">
+          </div>
+        </section>
 
         <hr class="hr-border">
 

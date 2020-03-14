@@ -7823,9 +7823,6 @@ main {
 .tile {
   padding: 5px; }
 
-.tile-1 {
-  width: 20%; }
-
 .tile-2 {
   width: 16.66667%; }
 
@@ -7853,5 +7850,9 @@ main {
   .chart-item:hover {
     cursor: pointer;
     color: gray; }
+
+/**
+ * The options section
+ */
 
 /*# sourceMappingURL=index.css.map */

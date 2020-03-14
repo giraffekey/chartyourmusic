@@ -6,13 +6,16 @@ ChartYourMusic
 
 // For keeping track of album covers and their order
 let sources = [];
-for(let i = 0; i < 9; i++) {
-  sources.push("assets/images/blank.png");
+for(let i = 0; i < 144; i++) {
+  sources.push('assets/images/blank.png');
 }
 
 // Options for editing the look of the chart
 let options = {
-  grid: false
+  grid: false,
+  rows: $('#rows').val(),
+  cols: $('#cols').val(),
+  length: $('#tiles').val()
 };
 
 // Helps with dynamic reordering during drag & drop
@@ -109,7 +112,8 @@ function repaintChart() {
 // For changing the number of or size of tiles in the chart
 function generateChart() {
   let innerHTML = '';
-  for(let i = 0; i < sources.length; i++) {
+  let length = options.grid ? options.rows*options.cols : options.length;
+  for(let i = 0; i < length; i++) {
     // Makes tiles get smaller as they go down unless chart is in a grid
     let tile_n = 'tile-1';
     if(!options.grid) {
@@ -118,9 +122,10 @@ function generateChart() {
       else if(i >= 10) tile_n = 'tile-2';
     }
 
-    innerHTML += `
-      <img class="tile ${tile_n}" src="${sources[i]}">
-    `;
+    innerHTML += `<img class="tile ${tile_n}" src="${sources[i]}"`;
+    if(tile_n === 'tile-1')
+      innerHTML += ` style="width: ${options.grid ? 100 / options.cols : 20}%"`
+    innerHTML += '>';
   }
 
   $('#chart').html(innerHTML);
@@ -178,8 +183,41 @@ function generateChart() {
         helper.css({width: width / 14, height: width / 14});
     }
   });
+
+  resize();
+}
+
+function chartType(grid) {
+  if(grid) {
+    $('#chart').css({width: Math.min(100, 40 + 5 * options.cols) + '%'});
+    $('#chartSize').show();
+    $('#chartLength').hide();
+  } else {
+    $('#chart').css({width: '100%'});
+    $('#chartSize').hide();
+    $('#chartLength').show();
+  }
+  options.grid = grid;
+  generateChart();
+}
+
+function chartSize() {
+  let rows = $('#rows').val();
+  let cols = $('#cols').val();
+  options.rows = rows;
+  $('#rowsNum').html(rows);
+  options.cols = cols;
+  $('#colsNum').html(cols);
+  chartType(true);
+}
+
+function chartLength() {
+  options.length = $('#tiles').val();
+  generateChart();
 }
 
 window.onresize = resize;
+$('#chartSize').hide();
+$('#rowsNum').html($('#rows').val());
+$('#colsNum').html($('#cols').val());
 generateChart();
-resize();
