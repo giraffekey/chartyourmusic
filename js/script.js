@@ -54,13 +54,15 @@ function checkEnter() {
   });
 }
 
-function getAlbums(artist = $('#artist').val(), album = $('#album').val()) {
+function getAlbums() {
+  let artist = $('#artist').val();
+  let album = $('#album').val();
   $('#results').html('');
   // Retrieve list of albums that match the search input
   fetch(`https://musicbrainz.org/ws/2/release?query=${album}&limit=15?inc=artist-credit&fmt=json`,
-  (resp) => {
+  resp => {
     let releases = JSON.parse(resp).releases;
-    console.log(releases);
+    // Filter album list to artists that are close to the search string
     if(artist) {
       releases = releases.filter(release => {
         let artists = release['artist-credit'];
@@ -77,17 +79,14 @@ function getAlbums(artist = $('#artist').val(), album = $('#album').val()) {
         }
         return found;
       });
-      console.log(releases);
     }
     for (let i = 0; i < releases.length; i++) {
       // Retrieve all variations of cover art for each release
       fetch('https://coverartarchive.org/release/' + releases[i]['id'],
-        (resp) => {
-          const images = JSON.parse(resp).images;
-          // Add each album cover to the #results div
-          for (let i = 0; i < images.length; i++) {
+        resp => {
+          JSON.parse(resp).images.forEach(image => {
             let img = document.createElement('img');
-            img.src = images[i]['image'];
+            img.src = image['image'];
             img.className = 'result';
             $(img).draggable({
               appendTo: 'body',
@@ -101,8 +100,9 @@ function getAlbums(artist = $('#artist').val(), album = $('#album').val()) {
             });
             $('#results').append(img);
             img.style.height = img.borderWidth + 'px';
-          }
-      });
+          });
+        }
+      );
     }
   });
 }
@@ -271,6 +271,37 @@ function importFromRYM() {
             'RYM_Album,First_Name,Last_Name,First_Name_Localized,Last_Name_Localized,Title,Release_Date,Rating,Ownership,Purchase_Date,Media_Type,Review'
           );
           let userData = $.csv.toObjects(response);
+          userData = userData.sort((obj1, obj2) => obj2.Rating - obj1.Rating);
+          let length = Math.min(144, 3*(options.grid ? options.rows * options.cols : options.length));
+          for(let i = 0; i < length; i++) {
+            let obj = userData[i];
+            window.setTimeout(
+              fetch, 1000 * i,
+              `https://musicbrainz.org/ws/2/release?query=${obj.Title}&limit=15?inc=artist-credit&fmt=json`,
+              resp => {
+                let release = JSON.parse(resp).releases.find(rel => {
+                  let artists = rel['artist-credit'];
+                  let found = false;
+                  for(let i = 0; i < artists.length; i++) {
+                    let artist = artists[i];
+                    if(artist.name == obj.Last_Name || artist.name == obj.First_Name+" "+obj.Last_Name) {
+                      found = true;
+                      break;
+                    }
+                  }
+                  return found;
+                });
+                if(release) {
+                  fetch('https://coverartarchive.org/release/' + release['id'],
+                    resp => {
+                      sources[sources.indexOf('assets/images/blank.png')] = JSON.parse(resp).images[0]['image']
+                      repaintChart();
+                    }
+                  );
+                }
+              }
+            );
+          }
         }
       });
     });

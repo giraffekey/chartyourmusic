@@ -1,5 +1,5 @@
 - Fixing the couple issues tile drag has (giraffe)
-- Improved search fields
+- Artist only search
 - Add more options (giraffe)
 - Chart list functionality
 - Figuring out how to export external images (giraffe)
