@@ -230,6 +230,35 @@ function innerPadding() {
   $('#innerPaddingNum').html(padding);
 }
 
+function importFromJSON() {
+  if ($('#jsonImport').is(':hidden')) {
+    $('#jsonImport').show();
+    $('#jsonImport').dialog({
+      draggable: false,
+      modal: true,
+      resizable: false,
+      title: 'JSON Import Data:'
+    });
+    
+    $('#jsonImport').change(() => {
+      let jsonUpload = URL.createObjectURL(document.getElementById('jsonImport').files[0]);
+
+      $.ajax({
+        type: 'GET',
+        url: jsonUpload,
+        dataType: 'text json',
+        success: function (response) {
+          // PARSE JSON HERE
+          console.log(jsonData);
+        }
+      });
+    });
+  }
+  else {
+    $('#jsonImport').hide();
+  }
+}
+
 function importFromRYM() {
   if ($('#csvImport').is(':hidden')) {
     $('#csvImport').show();
@@ -292,6 +321,7 @@ $(() => {
   $('#colsNum').html($('#cols').val());
 
   $("#csvImport").hide();
+  $("#jsonImport").hide();
 
   generateChart();
   window.onresize = resize;
