@@ -63,24 +63,6 @@ function getAlbums() {
   fetch(`https://musicbrainz.org/ws/2/release?query=${query}&limit=40?inc=artist-credit&fmt=json`,
   resp => {
     let releases = JSON.parse(resp).releases;
-    // Filter album list to artists that are close to the search string
-    if(artist) {
-      releases = releases.filter(release => {
-        let artists = release['artist-credit'];
-        let found = false;
-        for (let i = 0; i < artists.length; i++) {
-          let name = artists[i].name;
-          let match = name.match(new RegExp('['+artist+']', 'gi'));
-          if(match) {
-            if(Math.abs(match.length - name.length) < 5) {
-              found = true;
-              break;
-            }
-          }
-        }
-        return found;
-      });
-    }
     for (let i = 0; i < releases.length; i++) {
       // Retrieve all variations of cover art for each release
       fetch('https://coverartarchive.org/release/' + releases[i]['id'],
