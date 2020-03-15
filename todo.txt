@@ -1,9 +1,9 @@
 - Fixing the couple issues tile drag has (giraffe)
 - Improved search fields
 - Add more options (giraffe)
-- Chart list functionality
+- Chart list functionality (yee)
 - Figuring out how to export external images (giraffe)
 - Exporting/importing JSON (yee)
-- Importing RYM data (yee)
+- Importing RYM data (yee->giraffe)
 - Chart album titles and title editing 
 - Mobile friendliness
