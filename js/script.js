@@ -57,7 +57,7 @@ function checkEnter() {
 function getAlbums(artist = $('#artist').val(), album = $('#album').val()) {
   $('#results').html('');
   // Retrieve list of albums that match the search input
-  fetch(`https://musicbrainz.org/ws/2/release?query=${album}&limit=5?inc=artist-credit&fmt=json`,
+  fetch(`https://musicbrainz.org/ws/2/release?query=${album}&limit=15?inc=artist-credit&fmt=json`,
   (resp) => {
     let releases = JSON.parse(resp).releases;
     console.log(releases);
@@ -66,9 +66,13 @@ function getAlbums(artist = $('#artist').val(), album = $('#album').val()) {
         let artists = release['artist-credit'];
         let found = false;
         for (let i = 0; i < artists.length; i++) {
-          if(artists[i].name.toLowerCase() == artist) {
-            found = true;
-            break;
+          let name = artists[i].name;
+          let match = name.match(new RegExp('['+artist+']', 'gi'));
+          if(match) {
+            if(Math.abs(match.length - name.length) < 5) {
+              found = true;
+              break;
+            }
           }
         }
         return found;
