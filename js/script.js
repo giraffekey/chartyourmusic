@@ -58,8 +58,9 @@ function getAlbums() {
   let artist = $('#artist').val();
   let album = $('#album').val();
   $('#results').html('');
+  let query = (album ? 'release:'+album : '') + (album&&artist?'AND':'') + (artist ? 'artist:'+artist : '');
   // Retrieve list of albums that match the search input
-  fetch(`https://musicbrainz.org/ws/2/release?query=${album}&limit=15?inc=artist-credit&fmt=json`,
+  fetch(`https://musicbrainz.org/ws/2/release?query=${query}&limit=40?inc=artist-credit&fmt=json`,
   resp => {
     let releases = JSON.parse(resp).releases;
     // Filter album list to artists that are close to the search string
@@ -272,29 +273,21 @@ function importFromRYM() {
           );
           let userData = $.csv.toObjects(response);
           userData = userData.sort((obj1, obj2) => obj2.Rating - obj1.Rating);
-          let length = Math.min(144, 3*(options.grid ? options.rows * options.cols : options.length));
+          let length = Math.min(144, 4*(options.grid ? options.rows * options.cols : options.length));
           for(let i = 0; i < length; i++) {
             let obj = userData[i];
+            let query = 'release:'+obj.Title+'ANDartist:'+(obj.First_Name ? obj.First_Name+" " : "")+obj.Last_Name;
             window.setTimeout(
-              fetch, 1000 * i,
-              `https://musicbrainz.org/ws/2/release?query=${obj.Title}&limit=15?inc=artist-credit&fmt=json`,
+              fetch, 700 * i,
+              `https://musicbrainz.org/ws/2/release?query=${query}&limit=40?inc=artist-credit&fmt=json`,
               resp => {
-                let release = JSON.parse(resp).releases.find(rel => {
-                  let artists = rel['artist-credit'];
-                  let found = false;
-                  for(let i = 0; i < artists.length; i++) {
-                    let artist = artists[i];
-                    if(artist.name == obj.Last_Name || artist.name == obj.First_Name+" "+obj.Last_Name) {
-                      found = true;
-                      break;
-                    }
-                  }
-                  return found;
-                });
+                let release = JSON.parse(resp).releases.find(
+                  release => release.title == obj.Title
+                );
                 if(release) {
                   fetch('https://coverartarchive.org/release/' + release['id'],
                     resp => {
-                      sources[sources.indexOf('assets/images/blank.png')] = JSON.parse(resp).images[0]['image']
+                      sources[sources.indexOf('assets/images/blank.png')] = JSON.parse(resp).images.find(img => img.front)['image'];
                       repaintChart();
                     }
                   );
