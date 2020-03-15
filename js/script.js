@@ -47,21 +47,34 @@ function fetch(url, ready) {
 }
 
 function checkEnter() {
-  $('#album').on('keypress', function(e) {
+  $('#album, #artist').on('keypress', function(e) {
     if (e.which === 13) {
       getAlbums();
     }
   });
 }
 
-function getAlbums() {
-  let artist = $('#artist').val();
-  let album = $('#album').val();
+function getAlbums(artist = $('#artist').val(), album = $('#album').val()) {
   $('#results').html('');
   // Retrieve list of albums that match the search input
   fetch(`https://musicbrainz.org/ws/2/release?query=${album}&limit=5?inc=artist-credit&fmt=json`,
   (resp) => {
-    const releases = JSON.parse(resp).releases;
+    let releases = JSON.parse(resp).releases;
+    console.log(releases);
+    if(artist) {
+      releases = releases.filter(release => {
+        let artists = release['artist-credit'];
+        let found = false;
+        for (let i = 0; i < artists.length; i++) {
+          if(artists[i].name.toLowerCase() == artist) {
+            found = true;
+            break;
+          }
+        }
+        return found;
+      });
+      console.log(releases);
+    }
     for (let i = 0; i < releases.length; i++) {
       // Retrieve all variations of cover art for each release
       fetch('https://coverartarchive.org/release/' + releases[i]['id'],
@@ -248,8 +261,12 @@ function importFromRYM() {
         url: userUpload,
         dataType: 'text',
         success: function (response) {
-          let userData = $.csv.toArray(response);
-          console.log(userData);
+          response = response.replace(/""/g, '0');
+          response = response.replace(
+            'RYM Album, First Name,Last Name,First Name localized, Last Name localized,Title,Release_Date,Rating,Ownership,Purchase Date,Media Type,Review', 
+            'RYM_Album,First_Name,Last_Name,First_Name_Localized,Last_Name_Localized,Title,Release_Date,Rating,Ownership,Purchase_Date,Media_Type,Review'
+          );
+          let userData = $.csv.toObjects(response);
         }
       });
     });
