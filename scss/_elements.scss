@@ -26,5 +26,8 @@ main {
     flex-basis: 10px;
     img {
         width: 50%;
+        &:hover {
+            cursor: pointer;
+        }
     }
 }

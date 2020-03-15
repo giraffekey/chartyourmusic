@@ -7795,6 +7795,8 @@ main {
   flex-basis: 10px; }
   #results img {
     width: 50%; }
+    #results img:hover {
+      cursor: pointer; }
 
 /**
  * Bootstrap class overwrites

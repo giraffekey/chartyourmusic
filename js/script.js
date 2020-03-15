@@ -64,12 +64,14 @@ function getAlbums() {
   resp => {
     let releases = JSON.parse(resp).releases;
     for (let i = 0; i < releases.length; i++) {
+      let rel = releases[i];
       // Retrieve all variations of cover art for each release
-      fetch('https://coverartarchive.org/release/' + releases[i]['id'],
+      fetch('https://coverartarchive.org/release/' + rel['id'],
         resp => {
           JSON.parse(resp).images.forEach(image => {
             let img = document.createElement('img');
             img.src = image['image'];
+            img.title = rel['artist-credit'][0]['name'] + ' - ' + rel['title'];
             img.className = 'result';
             $(img).draggable({
               appendTo: 'body',
@@ -289,7 +291,7 @@ function importFromRYM() {
             let obj = userData[i];
             let query = 'release:'+obj.Title+'ANDartist:'+(obj.First_Name ? obj.First_Name+" " : "")+obj.Last_Name;
             window.setTimeout(
-              fetch, 700 * i,
+              fetch, 50 * i,
               `https://musicbrainz.org/ws/2/release?query=${query}&limit=40?inc=artist-credit&fmt=json`,
               resp => {
                 let release = JSON.parse(resp).releases.find(
