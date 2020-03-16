@@ -1,14 +1,15 @@
-- Add more options (giraffe)
+- Options: background color/image, shadows, fonts (giraffe)
 - Chart list functionality (yee)
 - Figuring out how to export external images (giraffe)
 - Exporting/importing JSON (yee)
-- Chart album titles and title editing (giraffe)
+- Album title editing (giraffe)
 - Mobile friendliness
 
 + Stop loading duplicate url results 
 + Crop images to square 
 + Dropping on original location
 + Search results that prefer higher quality data and high ratings
++ Padding between rows for album titles
 
 * Remove tiles on double click?
 * Upload custom images
