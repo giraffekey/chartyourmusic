@@ -247,6 +247,23 @@ function titleToggle() {
   resize();
 }
 
+function storeToJSON() {
+  // Put the chart into an array
+  let inputJSON = $('#chart').toArray();
+  // Convert to JSON from js Array
+  let chartStorage = JSON.stringify(inputJSON);
+  // Set the JSON in the localStorage
+  let setJSON = localStorage.setItem('chartStorage', chartStorage);
+  // Optionally retrieve this *for when export is clicked in the future
+  let getJSON = JSON.parse(localStorage.getItem('chartStorage'));
+  
+  console.log(`
+  ${inputJSON}
+  ${chartStorage}
+  ${setJSON}
+  ${getJSON}`);
+}
+
 function importFromJSON() {
   if ($('#jsonImport').is(':hidden')) {
     $('#jsonImport').show();
