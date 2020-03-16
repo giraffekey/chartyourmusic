@@ -7833,10 +7833,13 @@ main {
   width: 7.14286%; }
 
 #titles {
-  font-size: 0.9em; }
+  display: flex;
+  flex-direction: column; }
 
 .title {
-  white-space: nowrap; }
+  background: transparent;
+  border: none;
+  color: white; }
 
 #chartList {
   height: 25vh; }

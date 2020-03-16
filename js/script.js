@@ -114,8 +114,18 @@ function repaintChart() {
   
   $('#titles').html('');
   for(let i = 0; i < images.length; i++) {
-    let classes = 'title d-block' + (i + 1 % options.cols == 0 ? ' pt-3' : '');
-    $('#titles').append(`<span class="${classes}">${titles[i]}</span>`);
+    if(titles[i]) {
+      let input = document.createElement('input');
+      input.type = 'text';
+      input.className = 'title' + (i + 1 % options.cols == 0 ? ' pt-3' : '');
+      input.value = titles[i];
+      input.style.width = titles[i].length*0.6+'em';
+      $(input).change((e) => {
+        titles[$('.title').index(e.target)] = e.target.value;
+        e.target.style.width = e.target.value.length*0.6+'em';
+      });
+      $('#titles').append(input);
+    }
   }
 }
 
@@ -340,7 +350,8 @@ $(() => {
   $("#csvImport").hide();
   $("#jsonImport").hide();
 
-  $("#titles").hide();
+  if(!$('#titleToggle').is(':checked'))
+    $('#titles').hide();
 
   generateChart();
   window.onresize = resize;

@@ -5,7 +5,7 @@
 - Album title editing (giraffe)
 - Mobile friendliness
 
-+ Stop loading duplicate url results 
++ Stop loading duplicate url results
 + Crop images to square 
 + Dropping on original location
 + Search results that prefer higher quality data and high ratings
