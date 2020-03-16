@@ -117,14 +117,17 @@ function repaintChart() {
     if(titles[i]) {
       let input = document.createElement('input');
       input.type = 'text';
-      input.className = 'title' + (i + 1 % options.cols == 0 ? ' pt-3' : '');
+      input.className = 'title';
       input.value = titles[i];
-      input.style.width = titles[i].length*0.6+'em';
+      input.style.width = input.value.length/1.5+'em';
       $(input).change((e) => {
         titles[$('.title').index(e.target)] = e.target.value;
-        e.target.style.width = e.target.value.length*0.6+'em';
+        e.target.style.width = e.target.value.length/1.5+'em';
       });
       $('#titles').append(input);
+    }
+    if((i + 1) % options.cols == 0 && options.grid) {
+      $('#titles').append('<div class="pt-3"></div>');
     }
   }
 }
@@ -369,6 +372,8 @@ $(() => {
 
   if(!$('#titleToggle').is(':checked'))
     $('#titles').hide();
+
+  chartType($('#gridRadio').is(':checked'));
 
   generateChart();
   window.onresize = resize;
