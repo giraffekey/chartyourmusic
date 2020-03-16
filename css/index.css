@@ -7816,9 +7816,11 @@ main {
 /**
  * Chart styling and classes
  */
+#chartContainer {
+  border: 1px solid white; }
+
 #chart {
   background-color: black;
-  border: 1px solid white;
   margin: 0 auto; }
 
 .tile-2 {
@@ -7829,6 +7831,12 @@ main {
 
 .tile-4 {
   width: 7.14286%; }
+
+#titles {
+  font-size: 0.9em; }
+
+.title {
+  white-space: nowrap; }
 
 #chartList {
   height: 25vh; }

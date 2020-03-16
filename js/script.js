@@ -6,8 +6,10 @@ ChartYourMusic
 
 // For keeping track of album covers and their order
 let sources = [];
+let titles = [];
 for(let i = 0; i < 144; i++) {
   sources.push('assets/images/blank.png');
+  titles.push('');
 }
 
 // Options for editing the look of the chart
@@ -109,6 +111,12 @@ function repaintChart() {
   for(let i = 0; i < images.length; i++) {
     images.get(i).src = sources[i];
   }
+  
+  $('#titles').html('');
+  for(let i = 0; i < images.length; i++) {
+    let classes = 'title d-block' + (i + 1 % options.cols == 0 ? ' pt-3' : '');
+    $('#titles').append(`<span class="${classes}">${titles[i]}</span>`);
+  }
 }
 
 // For changing the number of or size of tiles in the chart
@@ -129,7 +137,6 @@ function generateChart() {
       innerHTML += ` style="width: ${options.grid ? 100 / options.cols : 20}%"`
     innerHTML += '>';
   }
-
   $('#chart').html(innerHTML);
 
   $('.tile').droppable({
@@ -137,8 +144,9 @@ function generateChart() {
     drop: (e, ui) => {
       let images = $('#chart img');
       if($(ui.draggable).hasClass('result')) {
-        // Changes image after a search result is dropped into the tile
-        sources[images.index(e.target)] = $(ui.draggable).attr('src');      
+        let index = images.index(e.target);
+        sources[index] = $(ui.draggable).attr('src'); 
+        titles[index] = $(ui.draggable).attr('title');
         repaintChart();
       } else if($(ui.draggable).hasClass('tile')) {
         e.target.style.opacity = 1;
@@ -151,13 +159,15 @@ function generateChart() {
         // Moves source image into position mouse is hovering over
         // dragIndex is necessary because location of source image changes
         if(dragIndex === -1) dragIndex = images.index(ui.draggable);
+        let moveto = images.index(e.target);
         let src = sources.splice(dragIndex, 1);
-        sources.splice(images.index(e.target), 0, src);
-        dragIndex = images.index(e.target);
+        sources.splice(moveto, 0, src);
+        let title = titles.splice(dragIndex, 1);
+        titles.splice(moveto, 0, title);
+        dragIndex = moveto;
         repaintChart();
         // Makes sure dragged image doesn't change its source
         $(ui.helper).attr('src', src);
-        // Creates a blank space to indicate a drop
         e.target.style.opacity = 0;
       }
     },
@@ -232,6 +242,11 @@ function innerPadding() {
   $('#innerPaddingNum').html(padding);
 }
 
+function titleToggle() {
+  $('#titles').toggle();
+  resize();
+}
+
 function importFromJSON() {
   if ($('#jsonImport').is(':hidden')) {
     $('#jsonImport').show();
@@ -291,7 +306,7 @@ function importFromRYM() {
             let obj = userData[i];
             let query = 'release:'+obj.Title+'ANDartist:'+(obj.First_Name ? obj.First_Name+" " : "")+obj.Last_Name;
             window.setTimeout(
-              fetch, 50 * i,
+              fetch, 700 * i,
               `https://musicbrainz.org/ws/2/release?query=${query}&limit=40?inc=artist-credit&fmt=json`,
               resp => {
                 let release = JSON.parse(resp).releases.find(
@@ -324,6 +339,8 @@ $(() => {
 
   $("#csvImport").hide();
   $("#jsonImport").hide();
+
+  $("#titles").hide();
 
   generateChart();
   window.onresize = resize;

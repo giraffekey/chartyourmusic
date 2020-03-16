@@ -94,6 +94,8 @@
               <td id="innerPaddingNum"></td>
             </tr>
           </table>
+          <input type="checkbox" id="titleToggle" onclick="titleToggle()">
+          <label for="titleToggle">Album Titles</label>
         </section>
 
         <hr class="hr-border w-100">
@@ -158,7 +160,11 @@
 
         </header>
 
-        <div id="chart" class="d-flex flex-row flex-wrap justify-content-center"></div>
+        <!-- Chart -->
+        <div id="chartContainer" class="d-flex flex-row">
+          <div id="chart" class="d-flex flex-row flex-wrap justify-content-center flex-grow-1"></div>
+          <div id="titles" class="py-4 pr-4 text-light"></div>
+        </div>
 
       </main>
     </div>
