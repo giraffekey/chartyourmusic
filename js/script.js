@@ -119,10 +119,10 @@ function repaintChart() {
       input.type = 'text';
       input.className = 'title';
       input.value = titles[i];
-      input.style.width = input.value.length/1.5+'em';
+      input.style.width = input.value.length/2+'em';
       $(input).change((e) => {
         titles[$('.title').index(e.target)] = e.target.value;
-        e.target.style.width = e.target.value.length/1.5+'em';
+        e.target.style.width = e.target.value.length/2+'em';
       });
       $('#titles').append(input);
     }
@@ -352,7 +352,8 @@ function importFromRYM() {
           let length = Math.min(144, 4*(options.grid ? options.rows * options.cols : options.length));
           for(let i = 0; i < length; i++) {
             let obj = userData[i];
-            let query = 'release:'+obj.Title+'ANDartist:'+(obj.First_Name ? obj.First_Name+" " : "")+obj.Last_Name;
+            let artist = (obj.First_Name == 0 ? "" : obj.First_Name+" ")+obj.Last_Name;
+            let query = 'release:'+obj.Title+'ANDartist:'+artist;
             window.setTimeout(
               fetch, 700 * i,
               `https://musicbrainz.org/ws/2/release?query=${query}&limit=40?inc=artist-credit&fmt=json`,
@@ -363,7 +364,9 @@ function importFromRYM() {
                 if(release) {
                   fetch('https://coverartarchive.org/release/' + release['id'],
                     resp => {
-                      sources[sources.indexOf('assets/images/blank.png')] = JSON.parse(resp).images.find(img => img.front)['image'];
+                      let index = sources.indexOf('assets/images/blank.png');
+                      sources[index] = JSON.parse(resp).images.find(img => img.front)['image'];
+                      titles[index] = artist + ' - ' + obj.Title;
                       repaintChart();
                     }
                   );
