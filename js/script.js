@@ -97,10 +97,12 @@ function getAlbums() {
 function chartToImage(ext) {
   html2canvas(document.getElementById('chart')).then(
     (canvas) => {
+      document.body.appendChild(canvas);
       if(ext === 'jpg')
         Canvas2Image.saveAsJPEG(canvas);
       else if(ext === 'png')
         Canvas2Image.saveAsPNG(canvas);
+      document.body.removeChild(canvas);
     }
   );
 }
@@ -119,10 +121,10 @@ function repaintChart() {
       input.type = 'text';
       input.className = 'title';
       input.value = titles[i];
-      input.style.width = input.value.length/2+'em';
+      input.size = input.value.length * 0.75;
       $(input).change((e) => {
         titles[$('.title').index(e.target)] = e.target.value;
-        e.target.style.width = e.target.value.length/2+'em';
+        e.target.size = e.target.value.length * 0.75;
       });
       $('#titles').append(input);
     }
@@ -216,11 +218,11 @@ function generateChart() {
 
 function chartType(grid) {
   if(grid) {
-    $('#chart').css({width: Math.min(100, 40 + 5 * options.cols) + '%'});
+    $('#chartContainer').css({width: Math.min(100, 40 + 5 * options.cols) + '%'});
     $('#chartSize').show();
     $('#chartLength').hide();
   } else {
-    $('#chart').css({width: '100%'});
+    $('#chartContainer').css({width: '100%'});
     $('#chartSize').hide();
     $('#chartLength').show();
   }

@@ -7840,7 +7840,8 @@ main {
 .title {
   background: transparent;
   border: none;
-  color: white; }
+  color: white;
+  overflow: visible; }
 
 #chartList {
   height: 25vh; }
