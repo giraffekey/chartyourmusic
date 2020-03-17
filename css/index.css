@@ -7817,10 +7817,10 @@ main {
  * Chart styling and classes
  */
 #chartContainer {
+  background-color: black;
   border: 1px solid white; }
 
 #chart {
-  background-color: black;
   margin: 0 auto; }
 
 .tile-2 {
@@ -7874,5 +7874,12 @@ main {
 input[type=radio] {
   position: relative;
   top: 3px; }
+
+#fonts {
+  width: 80px; }
+
+#colorPicker {
+  padding: 0;
+  width: 50px; }
 
 /*# sourceMappingURL=index.css.map */

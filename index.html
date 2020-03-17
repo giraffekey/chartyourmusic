@@ -95,7 +95,22 @@
             </tr>
           </table>
           <input type="checkbox" id="titleToggle" onclick="titleToggle()">
-          <label for="titleToggle">Album Titles</label>
+          <label for="titleToggle">Album Titles</label><br>
+          <label for="fonts">Font:</label>
+          <select id="fonts" onchange="changeFont()">
+            <option value="Arial">Arial</option>
+            <option value="Courier">Courier</option>
+            <option value="'Franklin Gothic Medium'">Franklin Gothic Medium</option>
+            <option value="Georgia">Georgia</option>
+            <option value="Helvetica">Helvetica</option>
+            <option value="'Proxima Nova'">Proxima Nova</option>
+            <option value="'Times New Roman'">Times New Roman</option>
+          </select>
+          <div class="d-flex flex-row justify-content-between align-items-center">
+            <label for="background">Background: </label>
+            <input type="text" id="background" class="w-50" placeholder="URL / Color" onchange="background()">
+            <input type="color" id="colorPicker" onchange="backgroundColor()">
+          </div>
         </section>
 
         <hr class="hr-border w-100">

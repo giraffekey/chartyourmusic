@@ -260,6 +260,24 @@ function titleToggle() {
   resize();
 }
 
+function changeFont() {
+  $('#titles').css('font-family', $('#fonts').val() + ', sans-serif');
+}
+
+function background() {
+  let val = $('#background').val().toLowerCase();
+  if(val.includes('http') || val.includes('www')) {
+    val = 'url(' + val + ')';
+  }
+  $('#chartContainer').css('background', val);
+}
+
+function backgroundColor() {
+  let val = $('#colorPicker').val();
+  $('#background').val(val);
+  $('#chartContainer').css('background', val);
+}
+
 function storeToJSON() {
   // Put the chart into an array
   let inputJSON = $('#chart').toArray();
@@ -374,6 +392,7 @@ $(() => {
     $('#titles').hide();
 
   chartType($('#gridRadio').is(':checked'));
+  background();
 
   generateChart();
   window.onresize = resize;
