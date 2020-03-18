@@ -98,12 +98,24 @@ function chartToImage(ext) {
   html2canvas(document.getElementById('chartContainer'), {
     useCORS: true,
     onrendered: (canvas) => {
+      let context = canvas.getContext('2d');
+      let images = $('#chart img');
+
+      for(let i = 0; i < images.size(); i++) {
+        if(sources[i] !== 'assets/images/blank.png') {
+          let img = new Image();
+          img.src = sources[i];
+          let x = images.get(i).position().left;
+          let y = images.get(i).position().top;
+          context.drawImage(img, x, y);
+        }
+      }
+
       document.body.appendChild(canvas);
       if(ext === 'jpg')
         Canvas2Image.saveAsJPEG(canvas);
       else if(ext === 'png')
         Canvas2Image.saveAsPNG(canvas);
-      document.body.removeChild(canvas);
     }
   });
 }
