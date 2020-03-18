@@ -1,5 +1,4 @@
 - Chart list functionality (yee)
-- Figuring out how to export external images (giraffe)
 - Exporting/importing JSON (yee)
 - Mobile friendliness
 
@@ -8,6 +7,7 @@
 + Dropping on original location
 + Search results that prefer higher quality data and high ratings
 + Album shadows
++ Fix issue with resizing while titles are overflowing
 
 * Remove tiles on double click?
 * Upload custom images
