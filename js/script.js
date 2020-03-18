@@ -100,7 +100,7 @@ function getAlbums() {
 }
 
 function chartToImage(ext) {
-  html2canvas(document.getElementById('chartContainer'), {allowTaint: true}).then(
+  html2canvas(document.getElementById('chartContainer'), {useCORS: true}).then(
     (canvas) => {
       let context = canvas.getContext('2d');
       let images = $('#chart img');
