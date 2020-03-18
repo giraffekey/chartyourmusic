@@ -95,7 +95,7 @@ function getAlbums() {
 }
 
 function chartToImage(ext) {
-  html2canvas(document.getElementById('chart')).then(
+  html2canvas(document.getElementById('chartContainer')).then(
     (canvas) => {
       document.body.appendChild(canvas);
       if(ext === 'jpg')
