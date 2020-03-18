@@ -314,8 +314,13 @@ function storeToJSON() {
   ${chartStorage}
   ${setJSON}
   ${getJSON}`);
+}
 
-  $('#exportJSON').click(function() {
+function exportToJSON() {
+  if (!inputJSON) {
+    storeToJSON();
+  }
+  else {
     $('#exportJSON').change(() => {
       let exportJSON = URL.createObjectURL(document.getElementById('exportJSON').files[0]);
 
@@ -329,7 +334,7 @@ function storeToJSON() {
         }
       });
     });
-  })
+  }
 }
 
 function importFromJSON() {
