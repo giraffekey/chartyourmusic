@@ -100,8 +100,22 @@ function getAlbums() {
 }
 
 function chartToImage(ext) {
-  html2canvas(document.getElementById('chart')).then(
+  html2canvas(document.getElementById('chartContainer'), {allowTaint: true}).then(
     (canvas) => {
+      let context = canvas.getContext('2d');
+      let images = $('#chart img');
+
+      for(let i = 0; i < images.length; i++) {
+        if(sources[i] !== 'assets/images/blank.png') {
+          let img = new Image();
+          img.src = sources[i];
+          let x = $(images[i]).position().left;
+          let y = $(images[i]).position().top;
+          context.drawImage(img, x, y);
+        }
+      }
+
+      document.body.appendChild(canvas);
       if(ext === 'jpg')
         Canvas2Image.saveAsJPEG(canvas);
       else if(ext === 'png')
@@ -119,15 +133,15 @@ function repaintChart() {
   
   $('#titles').html('');
   for(let i = 0; i < images.length; i++) {
-    if(titles[i]) {
+    if(titles[i].length > 0) {
       let input = document.createElement('input');
       input.type = 'text';
       input.className = 'title';
       input.value = titles[i];
-      input.style.width = input.value.length/2+'em';
+      input.size = input.value.length * 0.75;
       $(input).change((e) => {
         titles[$('.title').index(e.target)] = e.target.value;
-        e.target.style.width = e.target.value.length/2+'em';
+        e.target.size = e.target.value.length * 0.75;
       });
       $('#titles').append(input);
     }
@@ -221,11 +235,11 @@ function generateChart() {
 
 function chartType(grid) {
   if(grid) {
-    $('#chart').css({width: Math.min(100, 40 + 5 * options.cols) + '%'});
+    $('#chartContainer').css({width: Math.min(100, 40 + 10 * options.cols) + '%'});
     $('#chartSize').show();
     $('#chartLength').hide();
   } else {
-    $('#chart').css({width: '100%'});
+    $('#chartContainer').css({width: '100%'});
     $('#chartSize').hide();
     $('#chartLength').show();
   }

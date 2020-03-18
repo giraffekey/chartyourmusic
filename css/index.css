@@ -7818,10 +7818,12 @@ main {
  */
 #chartContainer {
   background-color: black;
-  border: 1px solid white; }
+  border: 1px solid white;
+  overflow-x: auto; }
 
 #chart {
-  margin: 0 auto; }
+  margin: 0 auto;
+  min-width: 70%; }
 
 .tile-2 {
   width: 16.66667%; }
@@ -7840,7 +7842,8 @@ main {
 .title {
   background: transparent;
   border: none;
-  color: white; }
+  color: white;
+  overflow: visible; }
 
 #chartList {
   height: 25vh; }

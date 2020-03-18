@@ -7,8 +7,6 @@
 + Crop images to square 
 + Dropping on original location
 + Search results that prefer higher quality data and high ratings
-+ Padding between rows for album titles on non-grid mode
-+ Horizontal scroll when too many titles
 + Album shadows
 
 * Remove tiles on double click?

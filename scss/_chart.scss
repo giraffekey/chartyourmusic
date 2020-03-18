@@ -5,10 +5,12 @@
 #chartContainer {
     background-color: black;
     border: 1px solid white;
+    overflow-x: auto;
 }
 
 #chart {
     margin: 0 auto;
+    min-width: 70%;
 }
 
 .tile-2 {
@@ -33,6 +35,7 @@
     background: transparent;
     border: none;
     color: white;
+    overflow: visible;
 }
 
 #chartList {
