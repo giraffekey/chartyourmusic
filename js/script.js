@@ -95,21 +95,18 @@ function getAlbums() {
 }
 
 function chartToImage(ext) {
-  html2canvas(document.getElementById('chartContainer'), {
-    useCORS: true,
-    onrendered: (canvas) => {
+  html2canvas(document.getElementById('chartContainer'), {allowTaint: true}).then(
+    (canvas) => {
       let context = canvas.getContext('2d');
       let images = $('#chart img');
 
-      for(let i = 0; i < images.size(); i++) {
+      for(let i = 0; i < images.length; i++) {
         if(sources[i] !== 'assets/images/blank.png') {
           let img = new Image();
           img.src = sources[i];
-          let x = images.get(i).position().left;
-          let y = images.get(i).position().top;
-          img.onload = () => {
-            context.drawImage(img, x, y);
-          }
+          let x = $(images[i]).position().left;
+          let y = $(images[i]).position().top;
+          context.drawImage(img, x, y);
         }
       }
 
@@ -119,7 +116,7 @@ function chartToImage(ext) {
       else if(ext === 'png')
         Canvas2Image.saveAsPNG(canvas);
     }
-  });
+  );
 }
 
 // For rearranging the artwork of the tiles
@@ -131,7 +128,7 @@ function repaintChart() {
   
   $('#titles').html('');
   for(let i = 0; i < images.length; i++) {
-    if(titles[i]) {
+    if(titles[i].length > 0) {
       let input = document.createElement('input');
       input.type = 'text';
       input.className = 'title';
