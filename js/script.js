@@ -20,6 +20,11 @@ let options = {
   length: $('#tiles').val()
 };
 
+// Store sources, titles, and options
+let inputJSON;
+// Allow the JSON to be set at mutliple points
+let setJSON;
+
 // Helps with dynamic reordering during drag & drop
 let dragIndex = -1;
 
@@ -294,19 +299,42 @@ function backgroundColor() {
 
 function storeToJSON() {
   // Put the chart into an array
-  let inputJSON = $('#chart').toArray();
+  inputJSON = `{${sources},
+  ${titles},
+  ${options}}`
   // Convert to JSON from js Array
   let chartStorage = JSON.stringify(inputJSON);
   // Set the JSON in the localStorage
-  let setJSON = localStorage.setItem('chartStorage', chartStorage);
+  setJSON = localStorage.setItem('chartStorage', chartStorage);
   // Optionally retrieve this *for when export is clicked in the future
-  let getJSON = JSON.parse(localStorage.getItem('chartStorage'));
+  getJSON = JSON.parse(localStorage.getItem('chartStorage'));
   
   console.log(`
   ${inputJSON}
   ${chartStorage}
   ${setJSON}
   ${getJSON}`);
+}
+
+function exportToJSON() {
+  if (!inputJSON) {
+    storeToJSON();
+  }
+  else {
+    $('#exportJSON').change(() => {
+      let exportJSON = URL.createObjectURL(document.getElementById('exportJSON').files[0]);
+
+      $.ajax({
+        type: 'POST',
+        url: exportJSON,
+        dataType: 'text json',
+        success: function (response) {
+          setJSON = localStorage.setItem('chartStorage', exportJSON);
+          console.log(exportJSON);
+        }
+      });
+    });
+  }
 }
 
 function importFromJSON() {
@@ -327,8 +355,8 @@ function importFromJSON() {
         url: jsonUpload,
         dataType: 'text json',
         success: function (response) {
-          // PARSE JSON HERE
-          console.log(jsonData);
+          setJSON = localStorage.setItem('chartStorage', jsonUpload);
+          console.log(inputJSON);
         }
       });
     });
