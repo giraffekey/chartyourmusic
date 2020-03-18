@@ -20,6 +20,9 @@ let options = {
   length: $('#tiles').val()
 };
 
+// Count each chart
+let chartCount = 1;
+
 // Store sources, titles, and options
 let inputJSON;
 // Allow the JSON to be set at mutliple points
@@ -307,6 +310,15 @@ function backgroundColor() {
   let val = $('#colorPicker').val();
   $('#background').val(val);
   $('#chartContainer').css('background', val);
+}
+
+function addChart() {
+  chartCount ++;
+  $('#addChart').replaceWith( `
+    <div class="chart-item">
+      <span>Chart #${chartCount}</span>
+    </div>
+    <button id="addChart" class="btn btn-light btn-sm" onclick="addChart()">Add chart</button>`);
 }
 
 function storeToJSON() {

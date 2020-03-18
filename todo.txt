@@ -11,4 +11,3 @@
 
 * Remove tiles on double click?
 * Upload custom images
-** Small configuration options when importing RYM data?
