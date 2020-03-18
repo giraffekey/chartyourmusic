@@ -95,8 +95,9 @@ function getAlbums() {
 }
 
 function chartToImage(ext) {
-  html2canvas(document.getElementById('chartContainer')).then(
-    (canvas) => {
+  html2canvas(document.getElementById('chartContainer'), {
+    useCORS: true,
+    onrendered: (canvas) => {
       document.body.appendChild(canvas);
       if(ext === 'jpg')
         Canvas2Image.saveAsJPEG(canvas);
@@ -104,7 +105,7 @@ function chartToImage(ext) {
         Canvas2Image.saveAsPNG(canvas);
       document.body.removeChild(canvas);
     }
-  );
+  });
 }
 
 // For rearranging the artwork of the tiles
