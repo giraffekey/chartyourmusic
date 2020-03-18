@@ -107,7 +107,9 @@ function chartToImage(ext) {
           img.src = sources[i];
           let x = images.get(i).position().left;
           let y = images.get(i).position().top;
-          context.drawImage(img, x, y);
+          img.onload = () => {
+            context.drawImage(img, x, y);
+          }
         }
       }
 
@@ -231,7 +233,7 @@ function generateChart() {
 
 function chartType(grid) {
   if(grid) {
-    $('#chartContainer').css({width: Math.min(100, 40 + 5 * options.cols) + '%'});
+    $('#chartContainer').css({width: Math.min(100, 40 + 10 * options.cols) + '%'});
     $('#chartSize').show();
     $('#chartLength').hide();
   } else {
