@@ -28,6 +28,8 @@ let setJSON;
 // Helps with dynamic reordering during drag & drop
 let dragIndex = -1;
 
+let maxHeight = false;
+
 function optionsArrow() {
   let arrow = $('#optionsArrow');
   if (arrow.html() === 'Options ▼')
@@ -100,6 +102,7 @@ function getAlbums() {
 }
 
 function chartToImage(ext) {
+  $('#chartContainer').css({border: 'none'});
   html2canvas(document.getElementById('chartContainer'), {useCORS: true}).then(
     (canvas) => {
       let context = canvas.getContext('2d');
@@ -120,6 +123,8 @@ function chartToImage(ext) {
         Canvas2Image.saveAsJPEG(canvas);
       else if(ext === 'png')
         Canvas2Image.saveAsPNG(canvas);
+      document.body.removeChild(canvas);
+      $('#chartContainer').css({border: '1px solid white'});
     }
   );
 }
@@ -130,6 +135,8 @@ function repaintChart() {
   for(let i = 0; i < images.length; i++) {
     images.get(i).src = sources[i];
   }
+
+  let height = $('#chartContainer').height();
   
   $('#titles').html('');
   for(let i = 0; i < images.length; i++) {
@@ -138,16 +145,21 @@ function repaintChart() {
       input.type = 'text';
       input.className = 'title';
       input.value = titles[i];
-      input.size = input.value.length * 0.75;
+      input.size = input.value.length * 0.8;
       $(input).change((e) => {
         titles[$('.title').index(e.target)] = e.target.value;
-        e.target.size = e.target.value.length * 0.75;
+        e.target.size = e.target.value.length * 0.8;
       });
       $('#titles').append(input);
     }
     if((i + 1) % options.cols == 0 && options.grid) {
       $('#titles').append('<div class="pt-3"></div>');
     }
+  }
+
+  if($('#chartContainer').height() > height && !maxHeight) {
+    $('#chart').css({maxHeight: height});
+    maxHeight = true;
   }
 }
 
@@ -397,7 +409,7 @@ function importFromRYM() {
             let artist = (obj.First_Name == 0 ? "" : obj.First_Name+" ")+obj.Last_Name;
             let query = 'release:'+obj.Title+'ANDartist:'+artist;
             window.setTimeout(
-              fetch, 700 * i,
+              fetch, 1000 * i,
               `https://musicbrainz.org/ws/2/release?query=${query}&limit=40?inc=artist-credit&fmt=json`,
               resp => {
                 let release = JSON.parse(resp).releases.find(
@@ -407,7 +419,7 @@ function importFromRYM() {
                   fetch('https://coverartarchive.org/release/' + release['id'],
                     resp => {
                       let index = sources.indexOf('assets/images/blank.png');
-                      sources[index] = JSON.parse(resp).images.find(img => img.front)['image'];
+                      sources[index] = JSON.parse(resp).images.find(img => img.front)['image'].replace('http:/', 'https:/');
                       titles[index] = artist + ' - ' + obj.Title;
                       repaintChart();
                     }

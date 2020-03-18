@@ -7818,12 +7818,10 @@ main {
  */
 #chartContainer {
   background-color: black;
-  border: 1px solid white;
-  overflow-x: auto; }
+  border: 1px solid white; }
 
 #chart {
-  margin: 0 auto;
-  min-width: 70%; }
+  margin: 0 auto; }
 
 .tile-2 {
   width: 16.66667%; }
