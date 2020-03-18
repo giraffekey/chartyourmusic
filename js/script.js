@@ -72,7 +72,7 @@ function getAlbums() {
         resp => {
           JSON.parse(resp).images.forEach(image => {
             let img = document.createElement('img');
-            img.src = image['image'];
+            img.src = image['image'].replace('http:/', 'https:/');
             img.title = rel['artist-credit'][0]['name'] + ' - ' + rel['title'];
             img.className = 'result';
             $(img).draggable({
