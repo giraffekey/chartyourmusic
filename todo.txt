@@ -2,7 +2,6 @@
 - Exporting/importing JSON (yee)
 - Mobile friendliness
 
-+ Crop images to square 
 + Dropping on original location
 + Search results that prefer higher quality data and high ratings
 + Album shadows

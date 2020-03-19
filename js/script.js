@@ -44,7 +44,8 @@ function optionsArrow() {
 
 function resize() {
   $('img').each((i, img) => {
-    img.style.height = img.borderWidth + 'px';
+    img.style.maxHeight = img.borderWidth + 'px';
+    img.style.minHeight = img.borderWidth + 'px';
   });
 }
 
@@ -71,6 +72,7 @@ function getAlbums() {
   let artist = $('#artist').val();
   let album = $('#album').val();
   $('#results').html('');
+  let sourceList = [];
   let query = (album ? 'release:'+album : '') + (album&&artist?' AND ':'') + (artist ? 'artist:'+artist : '');
   // Retrieve list of albums that match the search input
   fetch(`https://musicbrainz.org/ws/2/release?query=${query}&limit=40?inc=artist-credit&fmt=json`,
@@ -81,22 +83,25 @@ function getAlbums() {
       fetch('https://coverartarchive.org/release/' + rel['id'],
       resp => {
         JSON.parse(resp).images.forEach(image => {
-          let img = document.createElement('img');
-          img.src = image['image'].replace('http:/', 'https:/');
-          img.title = rel['artist-credit'][0]['name'] + ' - ' + rel['title'];
-          img.className = 'result';
-          $(img).draggable({
-            appendTo: 'body',
-            zIndex: 10,
-            helper: 'clone',
-            start: (e, ui) => {
-              // Fixes issue where dragged image is much larger than source image
-              let size = $('#results').width() / 2;
-              $(ui.helper).css({width: size, height: size});
-            }
-          });
-          $('#results').append(img);
-          img.style.height = img.borderWidth + 'px';
+          let source = image['image'].replace('http:/', 'https:/');
+          if(!sourceList.includes(source)) {
+            let img = document.createElement('img');
+            img.src = source;
+            img.title = rel['artist-credit'][0]['name'] + ' - ' + rel['title'];
+            img.className = 'result';
+            $(img).draggable({
+              appendTo: 'body',
+              zIndex: 10,
+              helper: 'clone',
+              start: (e, ui) => {
+                // Fixes issue where dragged image is much larger than source image
+                let size = $('#results').width() / 2;
+                $(ui.helper).css({width: size, height: size});
+              }
+            });
+            $(img).css({height: $('#results').width()/2});
+            $('#results').append(img);
+          }
         });
       });
     }
@@ -309,9 +314,7 @@ function addChart() {
 
 function storeToJSON() {
   // Put the chart into an array
-  inputJSON = `{${sources},
-  ${titles},
-  ${options}}`
+  inputJSON = {sources, titles, options};
   // Convert to JSON from js Array
   let chartStorage = JSON.stringify(inputJSON);
   // Set the JSON in the localStorage
@@ -324,6 +327,7 @@ function storeToJSON() {
   ${chartStorage}
   ${setJSON}
   ${getJSON}`);
+  console.log(getJSON); 
 }
 
 function exportToJSON() {

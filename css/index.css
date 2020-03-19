@@ -7844,7 +7844,7 @@ main {
   overflow: visible; }
 
 #chartList {
-  height: 25vh; }
+  max-height: 25vh; }
 
 .chart-item {
   height: 50px;
