@@ -187,6 +187,13 @@ function generateChart() {
   }
   $('#chart').html(innerHTML);
 
+  $('.tile').dblclick(function(e) {
+    let index = $('#chart img').index(e.target);
+    sources[index] = 'assets/images/blank.png';
+    titles[index] = '';
+    repaintChart();
+  });
+
   $('.tile').droppable({
     accept: '.ui-draggable',
     drop: (e, ui) => {
@@ -226,6 +233,7 @@ function generateChart() {
   });
 
   $('.tile').draggable({
+    appendTo: 'body',
     zIndex: 10,
     helper: 'clone',
     start: (e, ui) => {
