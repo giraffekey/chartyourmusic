@@ -28,6 +28,7 @@ let setJSON;
 // Helps with dynamic reordering during drag & drop
 let dragIndex = -1;
 
+// Helps with fix for when there's too many titles
 let maxHeight = false;
 
 function optionsArrow() {
@@ -67,36 +68,34 @@ function getAlbums() {
   let artist = $('#artist').val();
   let album = $('#album').val();
   $('#results').html('');
-  let query = (album ? 'release:'+album : '') + (album&&artist?'AND':'') + (artist ? 'artist:'+artist : '');
+  let query = (album ? 'release:'+album : '') + (album&&artist?' AND ':'') + (artist ? 'artist:'+artist : '');
   // Retrieve list of albums that match the search input
   fetch(`https://musicbrainz.org/ws/2/release?query=${query}&limit=40?inc=artist-credit&fmt=json`,
   resp => {
     let releases = JSON.parse(resp).releases;
     for (let i = 0; i < releases.length; i++) {
       let rel = releases[i];
-      // Retrieve all variations of cover art for each release
       fetch('https://coverartarchive.org/release/' + rel['id'],
-        resp => {
-          JSON.parse(resp).images.forEach(image => {
-            let img = document.createElement('img');
-            img.src = image['image'].replace('http:/', 'https:/');
-            img.title = rel['artist-credit'][0]['name'] + ' - ' + rel['title'];
-            img.className = 'result';
-            $(img).draggable({
-              appendTo: 'body',
-              zIndex: 10,
-              helper: 'clone',
-              start: (e, ui) => {
-                // Fixes issue where dragged image is much larger than source image
-                let size = $('#results').width() / 2;
-                $(ui.helper).css({width: size, height: size});
-              }
-            });
-            $('#results').append(img);
-            img.style.height = img.borderWidth + 'px';
+      resp => {
+        JSON.parse(resp).images.forEach(image => {
+          let img = document.createElement('img');
+          img.src = image['image'].replace('http:/', 'https:/');
+          img.title = rel['artist-credit'][0]['name'] + ' - ' + rel['title'];
+          img.className = 'result';
+          $(img).draggable({
+            appendTo: 'body',
+            zIndex: 10,
+            helper: 'clone',
+            start: (e, ui) => {
+              // Fixes issue where dragged image is much larger than source image
+              let size = $('#results').width() / 2;
+              $(ui.helper).css({width: size, height: size});
+            }
           });
-        }
-      );
+          $('#results').append(img);
+          img.style.height = img.borderWidth + 'px';
+        });
+      });
     }
   });
 }
@@ -145,15 +144,12 @@ function repaintChart() {
       input.type = 'text';
       input.className = 'title';
       input.value = titles[i];
-      input.size = input.value.length * 0.8;
+      input.style.width = input.value.length*0.55+'em';
       $(input).change((e) => {
         titles[$('.title').index(e.target)] = e.target.value;
-        e.target.size = e.target.value.length * 0.8;
+        e.target.style.width = e.target.value.length*0.55+'em';
       });
       $('#titles').append(input);
-    }
-    if((i + 1) % options.cols == 0 && options.grid) {
-      $('#titles').append('<div class="pt-3"></div>');
     }
   }
 
@@ -225,18 +221,7 @@ function generateChart() {
     zIndex: 10,
     helper: 'clone',
     start: (e, ui) => {
-      let width = $('#chart').width();
-      let target = $(e.target);
-      let helper = $(ui.helper);
-      // Makes sure dragged image is the same size as original tile
-      if(target.hasClass('tile-1'))
-        helper.css({width: width / 5, height: width / 5});
-      else if(target.hasClass('tile-2'))
-        helper.css({width: width / 6, height: width / 6});
-      else if(target.hasClass('tile-3'))
-        helper.css({width: width / 10, height: width / 10});
-      else if(target.hasClass('tile-4'))
-        helper.css({width: width / 14, height: width / 14});
+      $(ui.helper).css({width: e.target.offsetWidth, height: e.target.offsetHeight});
     }
   });
 
@@ -277,6 +262,7 @@ function chartLength() {
 function outerPadding() {
   let padding = $('#outerPadding').val()
   $('#chart').css({padding: padding * 2});
+  $('#titles').css({paddingTop: padding * 2, paddingBottom: padding * 2, paddingRight: padding});
   $('#outerPaddingNum').html(padding);
 }
 
