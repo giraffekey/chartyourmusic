@@ -23,11 +23,6 @@ let options = {
 // Count each chart
 let chartCount = 1;
 
-// Store sources, titles, and options
-let inputJSON;
-// Allow the JSON to be set at mutliple points
-let setJSON;
-
 // Helps with dynamic reordering during drag & drop
 let dragIndex = -1;
 
@@ -321,41 +316,23 @@ function addChart() {
 }
 
 function storeToJSON() {
-  // Put the chart into an array
-  inputJSON = {sources, titles, options};
-  // Convert to JSON from js Array
-  let chartStorage = JSON.stringify(inputJSON);
-  // Set the JSON in the localStorage
-  setJSON = localStorage.setItem('chartStorage', chartStorage);
-  // Optionally retrieve this *for when export is clicked in the future
-  getJSON = JSON.parse(localStorage.getItem('chartStorage'));
-  
-  console.log(`
-  ${inputJSON}
-  ${chartStorage}
-  ${setJSON}
-  ${getJSON}`);
-  console.log(getJSON); 
+  localStorage.setItem('chartStorage', JSON.stringify({sources, titles, options}));
 }
 
 function exportToJSON() {
-  if (!inputJSON) {
-    storeToJSON();
-  }
-  else {
-    $('#exportJSON').change(() => {
-      let exportJSON = URL.createObjectURL(document.getElementById('exportJSON').files[0]);
-
-      $.ajax({
-        type: 'POST',
-        url: exportJSON,
-        dataType: 'text json',
-        success: function (response) {
-          setJSON = localStorage.setItem('chartStorage', exportJSON);
-          console.log(exportJSON);
-        }
-      });
-    });
+  let file = new Blob([JSON.stringify({sources, titles, options})], {type: 'json'});
+  let filename = 'chart.json';
+  if(window.navigator.msSaveOrOpenBlob) { // Internet Explorer
+    window.navigator.msSaveOrOpenBlob(file, filename);
+  } else { // Actual web browsers
+    let a = document.createElement("a")
+    let url = URL.createObjectURL(file);
+    a.href = url;
+    a.download = filename;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    window.URL.revokeObjectURL(url);  
   }
 }
 
@@ -375,10 +352,11 @@ function importFromJSON() {
       $.ajax({
         type: 'GET',
         url: jsonUpload,
-        dataType: 'text json',
+        dataType: 'text',
         success: function (response) {
-          setJSON = localStorage.setItem('chartStorage', jsonUpload);
-          console.log(inputJSON);
+          [sources, titles, options] = Object.values(JSON.parse(response));
+          generateChart();
+          repaintChart();
         }
       });
     });

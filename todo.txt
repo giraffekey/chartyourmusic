@@ -1,5 +1,4 @@
 - Chart list functionality (yee)
-- Exporting/importing JSON (yee)
 - Mobile friendliness
 
 + Dropping on original location
