@@ -64,6 +64,11 @@ function checkEnter() {
       getAlbums();
     }
   });
+  $('#chartName').on('keypress', function (e) {
+    if (e.which === 13) {
+      $('#btnCreate').click();
+    }
+  });
 }
 
 /**
@@ -298,13 +303,7 @@ function newChart() {
     charts[charts.length-1].titles.push('');
   }
 
-  $(`
-    <div class="chart-item">
-      <span>${charts[charts.length-1].name}</span>
-    </div>
-  `).insertBefore('#createChart');
-
-  loadChart(charts.length-1);
+  chartItemString(charts[charts.length - 1].name);
 }
 
 /**
@@ -349,7 +348,7 @@ function loadChart(index) {
  */
 function storeToJSON() {
   charts[chartIndex] = chart;
-  localStorage.setItem('chartStorage', JSON.stringify({charts, index: chartIndex}));
+  localStorage.setItem('chartStorage', JSON.stringify({ charts, index: chartIndex }));
 }
 
 /**
@@ -389,12 +388,7 @@ function importFromJSON() {
       fetch(URL.createObjectURL(document.getElementById('jsonImport').files[0]),
       resp => {
         charts.push(JSON.parse(resp));
-        $(`
-          <div class="chart-item">
-            <span>${charts[charts.length-1].name}</span>
-          </div>
-        `).insertBefore('#createChart');
-        loadChart(charts.length-1);
+        chartItemString(charts[charts.length - 1].name)
       });
     });
   }
@@ -556,6 +550,27 @@ function backgroundColor() {
   chart.options.background = val;
   $('#background').val(val);
   $('#chartContainer').css('background', val);
+}
+
+/**
+ * Return chart-item html string
+ */
+function chartItemString(name) {
+  $(`
+          <div class="chart-item">
+            <span contenteditable="false">${name}<button onclick="renameChart()">🖉</button><button onclick="deleteChart()">🗑</button></span>
+          </div>
+        `).insertBefore('#createChart');
+  loadChart(charts.length - 1);
+}
+
+function renameChart() {
+  // Add a way to select correct chart
+  $().attr('contenteditable', true)
+  .focus();
+}
+
+function deleteChart() {
 }
 
 $(() => {
