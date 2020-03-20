@@ -7856,11 +7856,10 @@ main {
     background: transparent;
     border: none;
     color: black; }
+  .chart-item.selected {
+    background: blue; }
   .chart-item:last-child {
     margin-bottom: 0; }
-  .chart-item:hover {
-    cursor: pointer;
-    color: gray; }
 
 /**
  * The options section

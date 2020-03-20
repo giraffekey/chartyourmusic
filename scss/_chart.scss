@@ -51,11 +51,10 @@
         border: none;
         color: black;
     }
+    &.selected {
+        background: blue;
+    }
     &:last-child {
         margin-bottom: 0;
-    }
-    &:hover {
-        cursor: pointer;
-        color: gray;
     }
 }

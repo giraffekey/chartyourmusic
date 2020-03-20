@@ -4,5 +4,6 @@
 + Dropping on original location
 + Album shadows
 + Fix issue with resizing while titles are overflowing
++ Drag and drop to rearrange charts
 
 * Upload custom images

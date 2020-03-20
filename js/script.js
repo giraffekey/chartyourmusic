@@ -318,6 +318,11 @@ function loadChart(index) {
 
   storeToJSON();
 
+  $('.chart-item.selected input[type=checkbox]').prop('checked', false);
+  $('.chart-item.selected').removeClass('selected');
+  $($('.chart-item').get(chartIndex)).addClass('selected');
+  $('.chart-item.selected input[type=checkbox]').prop('checked', true);
+
   if(chart.options.grid) {
     $('#gridRadio').attr('checked', true);
   } else {
@@ -560,6 +565,7 @@ function backgroundColor() {
 function chartItemString(name) {
   return `
     <div class="chart-item d-flex flex-row justify-content-between align-items-center">
+      <input type="checkbox" onclick="selectChart(event)">
       <input type="text" value="${name}" disabled>
       <button onclick="renameChart(event)">R</button>
       <button 
@@ -581,7 +587,7 @@ function chartItemString(name) {
  * Change name of selected chart 
  */
 function renameChart(e) {
-  $(e.target).siblings('input')
+  $(e.target).siblings('input[type=text]')
   .removeAttr('disabled').focus()
   .on('focusout change', e => {
     let input = e.target;
@@ -606,6 +612,16 @@ function deleteChart(e) {
   $(div).remove();
 }
 
+/**
+ * Select and load a chart from the list
+ */
+function selectChart(e) {
+  loadChart($('.chart-item').index($(e.target).parent()));
+}
+
+/**
+ * Runs when window is ready
+ */
 $(() => {
   $('#csvImport, #jsonImport').hide();
 
