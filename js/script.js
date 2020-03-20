@@ -165,15 +165,15 @@ function repaintChart() {
   
   $('#titles').html('');
   for(let i = 0; i < images.length; i++) {
-    if(titles[i].length > 0) {
+    if(chart.titles[i].length > 0) {
       let input = document.createElement('input');
       input.type = 'text';
       input.className = 'title';
       input.value = chart.titles[i];
-      input.style.width = input.value.length*0.55+'em';
+      input.style.width = input.value.length*0.6+'em';
       $(input).change((e) => {
         chart.titles[$('.title').index(e.target)] = e.target.value;
-        e.target.style.width = e.target.value.length*0.55+'em';
+        e.target.style.width = e.target.value.length*0.6+'em';
       });
       $('#titles').append(input);
     }
@@ -183,6 +183,8 @@ function repaintChart() {
     $('#chart').css({maxHeight: height});
     maxHeight = true;
   }
+
+  storeToJSON();
 }
 
 /**
@@ -275,6 +277,7 @@ function generateChart() {
   resize();
   outerPadding();
   innerPadding();
+  storeToJSON();
 }
 
 /**
@@ -381,82 +384,61 @@ function exportToJSON() {
  * Import chart data from file
  */
 function importFromJSON() {
-  if ($('#jsonImport').is(':hidden')) {
-    $('#jsonImport').show();
-    $('#jsonImport').dialog({
-      draggable: false,
-      modal: true,
-      resizable: false,
-      title: 'JSON Import Data:'
-    });
-    
-    $('#jsonImport').change(() => {
-      fetch(URL.createObjectURL(document.getElementById('jsonImport').files[0]),
-      resp => {
-        charts.push(JSON.parse(resp));
-        $(chartItemString(charts[charts.length - 1].name)).insertBefore('#createChart');
-        loadChart(charts.length - 1);
-      });
-    });
-  }
-  else {
-    $('#jsonImport').hide();
-  }
+  fetch(URL.createObjectURL($('#jsonImport').get(0).files[0]),
+  resp => {
+    charts.push(JSON.parse(resp));
+    $(chartItemString(charts[charts.length - 1].name)).insertBefore('#createChart');
+    loadChart(charts.length - 1);
+  });
 }
 
 /**
  * Generate chart images from RateYourMusic data
  */
 function importFromRYM() {
-  if ($('#csvImport').is(':hidden')) {
-    $('#csvImport').show();
-    $('#csvImport').dialog({
-      draggable: false,
-      modal: true,
-      resizable: false,
-      title: 'RYM Import Data:'
-    });
-    
-    $('#csvImport').change(() => {
-      fetch(URL.createObjectURL(document.getElementById('csvImport').files[0]),
-      resp => {
-        resp = resp.replace(/""/g, '0');
-        resp = resp.replace(
-          'RYM Album, First Name,Last Name,First Name localized, Last Name localized,Title,Release_Date,Rating,Ownership,Purchase Date,Media Type,Review', 
-          'RYM_Album,First_Name,Last_Name,First_Name_Localized,Last_Name_Localized,Title,Release_Date,Rating,Ownership,Purchase_Date,Media_Type,Review'
-        );
-        let userData = $.csv.toObjects(resp);
-        userData = userData.sort((obj1, obj2) => obj2.Rating - obj1.Rating);
-        let length = options.grid ? options.rows * options.cols : options.length;
-        for(let i = 0; i < length; i++) {
-          let obj = userData[i];
-          let artist = (obj.First_Name == 0 ? "" : obj.First_Name+" ")+obj.Last_Name;
-          let query = 'release:'+obj.Title+'ANDartist:'+artist;
-          window.setTimeout(
-            fetch, 1000 * i,
-            `https://musicbrainz.org/ws/2/release?query=${query}&limit=40?inc=artist-credit&fmt=json`,
-            resp => {
-              let release = JSON.parse(resp).releases.find(
-                release => release.title == obj.Title
-              );
-              if(release) {
-                fetch('https://coverartarchive.org/release/' + release['id'],
-                resp => {
-                  let index = chart.sources.indexOf('assets/images/blank.png');
-                  chart.sources[index] = JSON.parse(resp).images.find(img => img.front)['image'].replace('http:/', 'https:/');
-                  chart.titles[index] = artist + ' - ' + obj.Title;
-                  repaintChart();
-                });
-              }
-            }
+  fetch(URL.createObjectURL($('#csvImport').get(0).files[0]),
+  resp => {
+    resp = resp.replace(/""/g, '0');
+    resp = resp.replace(
+      'RYM Album, First Name,Last Name,First Name localized, Last Name localized,Title,Release_Date,Rating,Ownership,Purchase Date,Media Type,Review', 
+      'RYM_Album,First_Name,Last_Name,First_Name_Localized,Last_Name_Localized,Title,Release_Date,Rating,Ownership,Purchase_Date,Media_Type,Review'
+    );
+    let userData = $.csv.toObjects(resp);
+    userData = userData.sort((obj1, obj2) => obj2.Rating - obj1.Rating);
+    let length = 2 * (
+      chart.options.grid 
+      ? chart.options.rows * chart.options.cols 
+      : chart.options.length
+    );
+    for(let i = 0; i < length; i++) {
+      let obj = userData[i];
+      let artist = (obj.First_Name == 0 ? "" : obj.First_Name+" ")+obj.Last_Name;
+      let query = 'release:'+obj.Title+' AND artist:'+artist;
+      window.setTimeout(
+        fetch, 1000 * i,
+        `https://musicbrainz.org/ws/2/release?query=${query}&limit=40?inc=artist-credit&fmt=json`,
+        resp => {
+          let release = JSON.parse(resp).releases.find(
+            release => release.title == obj.Title
           );
+          if(release) {
+            fetch('https://coverartarchive.org/release/' + release['id'],
+            resp => {
+              let index = chart.sources.indexOf('assets/images/blank.png');
+              if(index > -1 && index < 144) {
+                chart.sources[index] = JSON.parse(resp).images
+                  .find(img => img.front)['image']
+                  .replace('http:/', 'https:/')
+                ;
+                chart.titles[index] = artist + ' - ' + obj.Title;
+              }
+              repaintChart();
+            });
+          }
         }
-      });
-    });
-  }
-  else {
-    $('#csvImport').hide();
-  }
+      );
+    }
+  });
 }
 
 /**
@@ -572,7 +554,7 @@ function chartItemString(name) {
         onclick="
           $('#deleteTitle').html(
             'Are you sure you want to delete ' +
-            $(event.target).siblings('input').val() + '?'
+            $(event.target).siblings('input[type=text]').val() + '?'
           )
           $('#btnDelete').click(() => deleteChart(event));
         "
@@ -605,7 +587,7 @@ function deleteChart(e) {
   let index = $('.chart-item').index(div);
   charts.splice(index, 1);
   if(charts.length > 0) {
-    loadChart(chartIndex);
+    loadChart(Math.min(chartIndex, charts.length-1));
   } else {
     $('#createChart').click();
   }
@@ -623,8 +605,6 @@ function selectChart(e) {
  * Runs when window is ready
  */
 $(() => {
-  $('#csvImport, #jsonImport').hide();
-
   let data = JSON.parse(localStorage.getItem('chartStorage'));
 
   if(data) {

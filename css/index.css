@@ -7813,6 +7813,15 @@ main {
     background-color: black;
     color: white; }
 
+.modal-content {
+  background-color: black;
+  color: white;
+  border: 1px solid white;
+  border-radius: 0; }
+
+.close span {
+  color: white; }
+
 /**
  * Chart styling and classes
  */
