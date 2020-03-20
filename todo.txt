@@ -1,4 +1,4 @@
-- Chart list functionality (yee)
+- Chart list: edit, delete, restyle (giraffe)
 - Mobile friendliness
 
 + Dropping on original location

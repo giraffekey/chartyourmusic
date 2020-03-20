@@ -2,26 +2,18 @@
 
 ChartYourMusic
 
+@author GiraffeKey and sorwu
+
 ******************/
 
-// For keeping track of album covers and their order
-let sources = [];
-let titles = [];
-for(let i = 0; i < 144; i++) {
-  sources.push('assets/images/blank.png');
-  titles.push('');
-}
+// Array for the chart list
+let charts = [];
 
-// Options for editing the look of the chart
-let options = {
-  grid: false,
-  rows: $('#rows').val(),
-  cols: $('#cols').val(),
-  length: $('#tiles').val()
-};
+// Handle for the selected chart
+let chart;
 
-// Count each chart
-let chartCount = 1;
+// Index of selected chart
+let chartIndex;
 
 // Helps with dynamic reordering during drag & drop
 let dragIndex = -1;
@@ -29,6 +21,9 @@ let dragIndex = -1;
 // Helps with fix for when there's too many titles
 let maxHeight = false;
 
+/**
+ * For options dropdown visuals
+ */
 function optionsArrow() {
   let arrow = $('#optionsArrow');
   if (arrow.html() === 'Options ▼')
@@ -37,6 +32,9 @@ function optionsArrow() {
     arrow.html('Options ▼');
 }
 
+/**
+ * Resize images in #results and #charts to keep them square
+ */
 function resize() {
   $('img').each((i, img) => {
     img.style.maxHeight = img.borderWidth + 'px';
@@ -44,11 +42,16 @@ function resize() {
   });
 }
 
-function fetch(url, ready) {
+/**
+ * Ajax request
+ * @param {String} url 
+ * @param {Function} success 
+ */
+function fetch(url, success) {
   let http = new XMLHttpRequest();
   http.onreadystatechange = function() {
     if (this.readyState == 4 && this.status == 200) {
-      ready(this.responseText);
+      success(this.responseText);
     }
   };
   http.open('GET', url);
@@ -63,12 +66,20 @@ function checkEnter() {
   });
 }
 
+/**
+ * Fill #results with album covers based on search terms
+ */
 function getAlbums() {
   let artist = $('#artist').val();
   let album = $('#album').val();
   $('#results').html('');
+  // Avoids duplicate urls in results
   let sourceList = [];
-  let query = (album ? 'release:'+album : '') + (album&&artist?' AND ':'') + (artist ? 'artist:'+artist : '');
+  let query = 
+    (album ? 'release:'+album : '') +
+    (album && artist ? ' AND ' : '') +
+    (artist ? 'artist:'+artist : '')
+  ;
   // Retrieve list of albums that match the search input
   fetch(`https://musicbrainz.org/ws/2/release?query=${query}&limit=40?inc=artist-credit&fmt=json`,
   resp => {
@@ -103,6 +114,10 @@ function getAlbums() {
   });
 }
 
+/**
+ * Takes a screenshot of #chart and downloads it as an image
+ * @param {String} ext - png or jpg
+ */
 function chartToImage(ext) {
   $('#chartContainer').css({border: 'none'});
   html2canvas(document.getElementById('chartContainer'), {useCORS: true}).then(
@@ -111,9 +126,9 @@ function chartToImage(ext) {
       let images = $('#chart img');
 
       for(let i = 0; i < images.length; i++) {
-        if(sources[i] !== 'assets/images/blank.png') {
+        if(chart.sources[i] !== 'assets/images/blank.png') {
           let img = new Image();
-          img.src = sources[i];
+          img.src = chart.sources[i];
           let x = $(images[i]).position().left;
           let y = $(images[i]).position().top;
           context.drawImage(img, x, y);
@@ -126,16 +141,19 @@ function chartToImage(ext) {
       else if(ext === 'png')
         Canvas2Image.saveAsPNG(canvas);
       document.body.removeChild(canvas);
+
       $('#chartContainer').css({border: '1px solid white'});
     }
   );
 }
 
-// For rearranging the artwork of the tiles
+/**
+ * Rearranges the artwork and titles for visible chart
+ */
 function repaintChart() {
   let images = $('#chart img');
   for(let i = 0; i < images.length; i++) {
-    images.get(i).src = sources[i];
+    images.get(i).src = chart.sources[i];
   }
 
   let height = $('#chartContainer').height();
@@ -146,10 +164,10 @@ function repaintChart() {
       let input = document.createElement('input');
       input.type = 'text';
       input.className = 'title';
-      input.value = titles[i];
+      input.value = chart.titles[i];
       input.style.width = input.value.length*0.55+'em';
       $(input).change((e) => {
-        titles[$('.title').index(e.target)] = e.target.value;
+        chart.titles[$('.title').index(e.target)] = e.target.value;
         e.target.style.width = e.target.value.length*0.55+'em';
       });
       $('#titles').append(input);
@@ -162,47 +180,57 @@ function repaintChart() {
   }
 }
 
-// For changing the number of or size of tiles in the chart
+/**
+ * Generates tiles in #chart when tile amount changes
+ */
 function generateChart() {
   let innerHTML = '';
-  let length = options.grid ? options.rows*options.cols : options.length;
+  let length = 
+    chart.options.grid 
+    ? chart.options.rows * chart.options.cols 
+    : chart.options.length
+  ;
   for(let i = 0; i < length; i++) {
     // Makes tiles get smaller as they go down unless chart is in a grid
     let tile_n = 'tile-1';
-    if(!options.grid) {
+    if(!chart.options.grid) {
       if(i >= 52) tile_n = 'tile-4';
       else if(i >= 22) tile_n = 'tile-3';
       else if(i >= 10) tile_n = 'tile-2';
     }
 
-    innerHTML += `<img class="tile ${tile_n}" src="${sources[i]}"`;
+    innerHTML += `<img class="tile ${tile_n}" src="${chart.sources[i]}"`;
     if(tile_n === 'tile-1')
-      innerHTML += ` style="width: ${options.grid ? 100 / options.cols : 20}%"`
+      innerHTML += ` style="width: ${chart.options.grid ? 100 / chart.options.cols : 20}%"`
     innerHTML += '>';
   }
   $('#chart').html(innerHTML);
 
+  // Clear tile on double click
   $('.tile').dblclick(function(e) {
     let index = $('#chart img').index(e.target);
-    sources[index] = 'assets/images/blank.png';
-    titles[index] = '';
+    chart.sources[index] = 'assets/images/blank.png';
+    chart.titles[index] = '';
     repaintChart();
   });
 
   $('.tile').droppable({
     accept: '.ui-draggable',
+    // Search result? set source and title of tile
+    // Another tile? create visual drop effect
     drop: (e, ui) => {
       let images = $('#chart img');
       if($(ui.draggable).hasClass('result')) {
         let index = images.index(e.target);
-        sources[index] = $(ui.draggable).attr('src'); 
-        titles[index] = $(ui.draggable).attr('title');
+        chart.sources[index] = $(ui.draggable).attr('src'); 
+        chart.titles[index] = $(ui.draggable).attr('title');
         repaintChart();
       } else if($(ui.draggable).hasClass('tile')) {
         e.target.style.opacity = 1;
         dragIndex = -1;
       }
     },
+    // Dynamically rearranges chart during hover
     over: (e, ui) => {
       let images = $('#chart img');
       if($(ui.draggable).hasClass('tile')) {
@@ -210,17 +238,19 @@ function generateChart() {
         // dragIndex is necessary because location of source image changes
         if(dragIndex === -1) dragIndex = images.index(ui.draggable);
         let moveto = images.index(e.target);
-        let src = sources.splice(dragIndex, 1);
-        sources.splice(moveto, 0, src);
-        let title = titles.splice(dragIndex, 1);
-        titles.splice(moveto, 0, title);
+        let src = chart.sources.splice(dragIndex, 1);
+        chart.sources.splice(moveto, 0, src);
+        let title = chart.titles.splice(dragIndex, 1);
+        chart.titles.splice(moveto, 0, title);
         dragIndex = moveto;
         repaintChart();
         // Makes sure dragged image doesn't change its source
         $(ui.helper).attr('src', src);
+        // Create illusion of a blank drop space
         e.target.style.opacity = 0;
       }
     },
+    // Removes blank space when not hovering over
     out: (e, ui) => {
       if($(ui.draggable).hasClass('tile'))
         e.target.style.opacity = 1;
@@ -228,6 +258,7 @@ function generateChart() {
   });
 
   $('.tile').draggable({
+    // If not appended to body $('#chart img') will include dragged clone
     appendTo: 'body',
     zIndex: 10,
     helper: 'clone',
@@ -241,87 +272,92 @@ function generateChart() {
   innerPadding();
 }
 
-function chartType(grid) {
-  if(grid) {
-    $('#chartContainer').css({width: Math.min(100, 40 + 10 * options.cols) + '%'});
-    $('#chartSize').show();
-    $('#chartLength').hide();
-  } else {
-    $('#chartContainer').css({width: '100%'});
-    $('#chartSize').hide();
-    $('#chartLength').show();
+/**
+ * Create a new chart and add to list
+ */
+function newChart() {
+  charts.push({
+    name: $('#chartName').val(),
+    sources: [],
+    titles: [],
+    options: {
+      grid: false,
+      rows: 3,
+      cols: 3,
+      length: 40,
+      outerPadding: 10,
+      innerPadding: 4,
+      titles: false,
+      font: 'Arial',
+      background: ''
+    }
+  });
+
+  for(let i = 0; i < 144; i++) {
+    charts[charts.length-1].sources.push('assets/images/blank.png');
+    charts[charts.length-1].titles.push('');
   }
-  options.grid = grid;
-  generateChart();
-}
 
-function chartSize() {
-  let rows = $('#rows').val();
-  let cols = $('#cols').val();
-  options.rows = rows;
-  $('#rowsNum').html(rows);
-  options.cols = cols;
-  $('#colsNum').html(cols);
-  chartType(true);
-}
-
-function chartLength() {
-  options.length = $('#tiles').val();
-  generateChart();
-}
-
-function outerPadding() {
-  let padding = $('#outerPadding').val()
-  $('#chart').css({padding: padding * 2});
-  $('#titles').css({paddingTop: padding * 2, paddingBottom: padding * 2, paddingRight: padding});
-  $('#outerPaddingNum').html(padding);
-}
-
-function innerPadding() {
-  let padding = $('#innerPadding').val();
-  $('#chart img').css({padding: padding});
-  $('#innerPaddingNum').html(padding);
-}
-
-function titleToggle() {
-  $('#titles').toggle();
-  resize();
-}
-
-function changeFont() {
-  $('#titles').css('font-family', $('#fonts').val() + ', sans-serif');
-}
-
-function background() {
-  let val = $('#background').val().toLowerCase();
-  if(val.includes('http') || val.includes('www')) {
-    val = 'url(' + val + ')';
-  }
-  $('#chartContainer').css('background', val);
-}
-
-function backgroundColor() {
-  let val = $('#colorPicker').val();
-  $('#background').val(val);
-  $('#chartContainer').css('background', val);
-}
-
-function addChart() {
-  chartCount ++;
-  $('#addChart').replaceWith( `
+  $(`
     <div class="chart-item">
-      <span>Chart #${chartCount}</span>
+      <span>${charts[charts.length-1].name}</span>
     </div>
-    <button id="addChart" class="btn btn-light btn-sm" onclick="addChart()">Add chart</button>`);
+  `).insertBefore('#createChart');
+
+  loadChart(charts.length-1);
 }
 
+/**
+ * Change active chart data
+ * @param {Number} index
+ */
+function loadChart(index) {
+  charts[chartIndex] = chart;
+  chart = charts[index];
+  chartIndex = index;
+
+  storeToJSON();
+
+  if(chart.options.grid) {
+    $('#gridRadio').attr('checked', true);
+  } else {
+    $('#collageRadio').attr('checked', true);
+  }
+
+  $('#rows').val(chart.options.rows);
+  $('#cols').val(chart.options.cols);
+  $('#tiles').val(chart.options.length);
+  $('#outerPadding').val(chart.options.outerPadding);
+  $('#innerPadding').val(chart.options.innerPadding);
+
+  if(chart.options.titles) {
+    $('#titleToggle').attr('checked', true);
+  } else {
+    $('#titles').hide();
+  }
+
+  $('#fonts').val(chart.options.font);
+  $('#background').val(chart.options.background);
+
+  chartType(chart.options.grid);
+  changeFont();
+  background();
+}
+
+/**
+ * Save data to localStorage
+ */
 function storeToJSON() {
-  localStorage.setItem('chartStorage', JSON.stringify({sources, titles, options}));
+  charts[chartIndex] = chart;
+  localStorage.setItem('chartStorage', JSON.stringify({charts, index: chartIndex}));
 }
 
+/**
+ * Download chart data as json file
+ */
 function exportToJSON() {
-  let file = new Blob([JSON.stringify({sources, titles, options})], {type: 'json'});
-  let filename = 'chart.json';
+  let file = new Blob([JSON.stringify(chart)], {type: 'json'});
+  let filename = chart.name.toLowerCase().replace(/\s/g, '-') + '.json';
   if(window.navigator.msSaveOrOpenBlob) { // Internet Explorer
     window.navigator.msSaveOrOpenBlob(file, filename);
   } else { // Actual web browsers
@@ -336,6 +372,9 @@ function exportToJSON() {
   }
 }
 
+/**
+ * Import chart data from file
+ */
 function importFromJSON() {
   if ($('#jsonImport').is(':hidden')) {
     $('#jsonImport').show();
@@ -347,17 +386,15 @@ function importFromJSON() {
     });
     
     $('#jsonImport').change(() => {
-      let jsonUpload = URL.createObjectURL(document.getElementById('jsonImport').files[0]);
-
-      $.ajax({
-        type: 'GET',
-        url: jsonUpload,
-        dataType: 'text',
-        success: function (response) {
-          [sources, titles, options] = Object.values(JSON.parse(response));
-          generateChart();
-          repaintChart();
-        }
+      fetch(URL.createObjectURL(document.getElementById('jsonImport').files[0]),
+      resp => {
+        charts.push(JSON.parse(resp));
+        $(`
+          <div class="chart-item">
+            <span>${charts[charts.length-1].name}</span>
+          </div>
+        `).insertBefore('#createChart');
+        loadChart(charts.length-1);
       });
     });
   }
@@ -366,6 +403,9 @@ function importFromJSON() {
   }
 }
 
+/**
+ * Generate chart images from RateYourMusic data
+ */
 function importFromRYM() {
   if ($('#csvImport').is(':hidden')) {
     $('#csvImport').show();
@@ -377,45 +417,38 @@ function importFromRYM() {
     });
     
     $('#csvImport').change(() => {
-      let userUpload = URL.createObjectURL(document.getElementById('csvImport').files[0]);
-
-      $.ajax({
-        type: 'GET',
-        url: userUpload,
-        dataType: 'text',
-        success: function (response) {
-          response = response.replace(/""/g, '0');
-          response = response.replace(
-            'RYM Album, First Name,Last Name,First Name localized, Last Name localized,Title,Release_Date,Rating,Ownership,Purchase Date,Media Type,Review', 
-            'RYM_Album,First_Name,Last_Name,First_Name_Localized,Last_Name_Localized,Title,Release_Date,Rating,Ownership,Purchase_Date,Media_Type,Review'
-          );
-          let userData = $.csv.toObjects(response);
-          userData = userData.sort((obj1, obj2) => obj2.Rating - obj1.Rating);
-          let length = Math.min(144, 4*(options.grid ? options.rows * options.cols : options.length));
-          for(let i = 0; i < length; i++) {
-            let obj = userData[i];
-            let artist = (obj.First_Name == 0 ? "" : obj.First_Name+" ")+obj.Last_Name;
-            let query = 'release:'+obj.Title+'ANDartist:'+artist;
-            window.setTimeout(
-              fetch, 1000 * i,
-              `https://musicbrainz.org/ws/2/release?query=${query}&limit=40?inc=artist-credit&fmt=json`,
-              resp => {
-                let release = JSON.parse(resp).releases.find(
-                  release => release.title == obj.Title
-                );
-                if(release) {
-                  fetch('https://coverartarchive.org/release/' + release['id'],
-                    resp => {
-                      let index = sources.indexOf('assets/images/blank.png');
-                      sources[index] = JSON.parse(resp).images.find(img => img.front)['image'].replace('http:/', 'https:/');
-                      titles[index] = artist + ' - ' + obj.Title;
-                      repaintChart();
-                    }
-                  );
-                }
+      fetch(URL.createObjectURL(document.getElementById('csvImport').files[0]),
+      resp => {
+        resp = resp.replace(/""/g, '0');
+        resp = resp.replace(
+          'RYM Album, First Name,Last Name,First Name localized, Last Name localized,Title,Release_Date,Rating,Ownership,Purchase Date,Media Type,Review', 
+          'RYM_Album,First_Name,Last_Name,First_Name_Localized,Last_Name_Localized,Title,Release_Date,Rating,Ownership,Purchase_Date,Media_Type,Review'
+        );
+        let userData = $.csv.toObjects(resp);
+        userData = userData.sort((obj1, obj2) => obj2.Rating - obj1.Rating);
+        let length = options.grid ? options.rows * options.cols : options.length;
+        for(let i = 0; i < length; i++) {
+          let obj = userData[i];
+          let artist = (obj.First_Name == 0 ? "" : obj.First_Name+" ")+obj.Last_Name;
+          let query = 'release:'+obj.Title+'ANDartist:'+artist;
+          window.setTimeout(
+            fetch, 1000 * i,
+            `https://musicbrainz.org/ws/2/release?query=${query}&limit=40?inc=artist-credit&fmt=json`,
+            resp => {
+              let release = JSON.parse(resp).releases.find(
+                release => release.title == obj.Title
+              );
+              if(release) {
+                fetch('https://coverartarchive.org/release/' + release['id'],
+                resp => {
+                  let index = chart.sources.indexOf('assets/images/blank.png');
+                  chart.sources[index] = JSON.parse(resp).images.find(img => img.front)['image'].replace('http:/', 'https:/');
+                  chart.titles[index] = artist + ' - ' + obj.Title;
+                  repaintChart();
+                });
               }
-            );
-          }
+            }
+          );
         }
       });
     });
@@ -425,20 +458,126 @@ function importFromRYM() {
   }
 }
 
-$(() => {
-  $('#chartSize').hide();
-  $('#rowsNum').html($('#rows').val());
-  $('#colsNum').html($('#cols').val());
-
-  $("#csvImport").hide();
-  $("#jsonImport").hide();
-
-  if(!$('#titleToggle').is(':checked'))
-    $('#titles').hide();
-
-  chartType($('#gridRadio').is(':checked'));
-  background();
-
+/**
+ * Changes between grid and collage display mode
+ * @param {Boolean} grid
+ */
+function chartType(grid) {
+  if(grid) {
+    $('#chartContainer').css({width: Math.min(100, 40 + 10 * chart.options.cols) + '%'});
+    $('#chartSize').show();
+    $('#chartLength').hide();
+  } else {
+    $('#chartContainer').css({width: '100%'});
+    $('#chartSize').hide();
+    $('#chartLength').show();
+  }
+  chart.options.grid = grid;
   generateChart();
+}
+
+/**
+ * Change rows and cols amount when in grid mode
+ */
+function chartSize() {
+  let rows = $('#rows').val();
+  let cols = $('#cols').val();
+  chart.options.rows = rows;
+  $('#rowsNum').html(rows);
+  chart.options.cols = cols;
+  $('#colsNum').html(cols);
+  chartType(true);
+}
+
+/**
+ * Change amount of tiles when in collage mode
+ */
+function chartLength() {
+  chart.options.length = $('#tiles').val();
+  generateChart();
+}
+
+/**
+ * Padding for #chart and #titles
+ */
+function outerPadding() {
+  let padding = $('#outerPadding').val();
+  chart.options.outerPadding = padding;
+  $('#chart').css({padding: padding * 2});
+  $('#titles').css({paddingTop: padding * 2, paddingBottom: padding * 2, paddingRight: padding});
+  $('#outerPaddingNum').html(padding);
+}
+
+/**
+ * Padding between tiles
+ */
+function innerPadding() {
+  let padding = $('#innerPadding').val();
+  chart.options.innerPadding = padding;
+  $('#chart img').css({padding: padding});
+  $('#innerPaddingNum').html(padding);
+}
+
+/**
+ * Show or hide titles list
+ */
+function titleToggle() {
+  $('#titles').toggle();
+  chart.options.titles = !chart.options.titles;
+  resize();
+}
+
+/**
+ * Change font of titles list
+ */
+function changeFont() {
+  let font = $('#fonts').val() + ', sans-serif';
+  chart.options.font = font;
+  $('#titles').css('font-family', font);
+}
+
+/**
+ * Background color or image of chart
+ */
+function background() {
+  let val = $('#background').val().toLowerCase();
+  if(val.includes('http') || val.includes('www')) {
+    val = 'url(' + val + ')';
+  }
+  chart.options.background = val;
+  $('#chartContainer').css('background', val);
+}
+
+/**
+ * For the color picker
+ */
+function backgroundColor() {
+  let val = $('#colorPicker').val();
+  chart.options.background = val;
+  $('#background').val(val);
+  $('#chartContainer').css('background', val);
+}
+
+$(() => {
+  $('#csvImport, #jsonImport').hide();
+
+  let data = JSON.parse(localStorage.getItem('chartStorage'));
+
+  if(data) {
+    charts = data.charts;
+    let innerHTML = '';
+    charts.forEach(item => {
+      innerHTML += `
+        <div class="chart-item">
+          <span>${item.name}</span>
+        </div>
+      `;
+    });
+    $('#chartList').prepend(innerHTML);
+    loadChart(data.index);
+  } else {
+    $('#createChart').click();
+  }
+
   window.onresize = resize;
 })
