@@ -46,10 +46,11 @@
     color: black;
     margin-bottom: 15px;
     padding: 20px;
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
-    align-items: center;
+    input:disabled {
+        background: transparent;
+        border: none;
+        color: black;
+    }
     &:last-child {
         margin-bottom: 0;
     }

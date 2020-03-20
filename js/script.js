@@ -303,7 +303,8 @@ function newChart() {
     charts[charts.length-1].titles.push('');
   }
 
-  chartItemString(charts[charts.length - 1].name);
+  $(chartItemString(charts[charts.length - 1].name)).insertBefore('#createChart');
+  loadChart(charts.length - 1);
 }
 
 /**
@@ -388,7 +389,8 @@ function importFromJSON() {
       fetch(URL.createObjectURL(document.getElementById('jsonImport').files[0]),
       resp => {
         charts.push(JSON.parse(resp));
-        chartItemString(charts[charts.length - 1].name)
+        $(chartItemString(charts[charts.length - 1].name)).insertBefore('#createChart');
+        loadChart(charts.length - 1);
       });
     });
   }
@@ -556,21 +558,52 @@ function backgroundColor() {
  * Return chart-item html string
  */
 function chartItemString(name) {
-  $(`
-          <div class="chart-item">
-            <span contenteditable="false">${name}<button onclick="renameChart()">🖉</button><button onclick="deleteChart()">🗑</button></span>
-          </div>
-        `).insertBefore('#createChart');
-  loadChart(charts.length - 1);
+  return `
+    <div class="chart-item d-flex flex-row justify-content-between align-items-center">
+      <input type="text" value="${name}" disabled>
+      <button onclick="renameChart(event)">R</button>
+      <button 
+        onclick="
+          $('#deleteTitle').html(
+            'Are you sure you want to delete ' +
+            $(event.target).siblings('input').val() + '?'
+          )
+          $('#btnDelete').click(() => deleteChart(event));
+        "
+        data-toggle="modal"
+        data-target="#deleteChartModal"
+      >🗑</button>
+    </div>
+  `;
 }
 
-function renameChart() {
-  // Add a way to select correct chart
-  $().attr('contenteditable', true)
-  .focus();
+/**
+ * Change name of selected chart 
+ */
+function renameChart(e) {
+  $(e.target).siblings('input')
+  .removeAttr('disabled').focus()
+  .on('focusout change', e => {
+    let input = e.target;
+    $(input).attr('disabled', true);
+    charts[$('.chart-item').index($(input).parent())].name = $(input).val();
+    storeToJSON();
+  });
 }
 
-function deleteChart() {
+/**
+ * Remove chart from list
+ */
+function deleteChart(e) {
+  let div = $(e.target).parent();
+  let index = $('.chart-item').index(div);
+  charts.splice(index, 1);
+  if(charts.length > 0) {
+    loadChart(chartIndex);
+  } else {
+    $('#createChart').click();
+  }
+  $(div).remove();
 }
 
 $(() => {
@@ -582,11 +615,7 @@ $(() => {
     charts = data.charts;
     let innerHTML = '';
     charts.forEach(item => {
-      innerHTML += `
-        <div class="chart-item">
-          <span>${item.name}</span>
-        </div>
-      `;
+      innerHTML += chartItemString(item.name);
     });
     $('#chartList').prepend(innerHTML);
     loadChart(data.index);
@@ -595,4 +624,4 @@ $(() => {
   }
 
   window.onresize = resize;
-})
+});
