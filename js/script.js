@@ -327,9 +327,9 @@ function loadChart(index) {
   $('.chart-item.selected input[type=checkbox]').prop('checked', true);
 
   if(chart.options.grid) {
-    $('#gridRadio').attr('checked', true);
+    $('#gridRadio').prop('checked', true);
   } else {
-    $('#collageRadio').attr('checked', true);
+    $('#collageRadio').prop('checked', true);
   }
 
   $('#rows').val(chart.options.rows);
@@ -338,9 +338,9 @@ function loadChart(index) {
   $('#outerPadding').val(chart.options.outerPadding);
   $('#innerPadding').val(chart.options.innerPadding);
 
-  if(chart.options.titles) {
-    $('#titleToggle').attr('checked', true);
-  } else {
+
+  $('#titleToggle').prop('checked', chart.options.titles);
+  if(!chart.options.titles) {
     $('#titles').hide();
   }
 
@@ -439,6 +439,16 @@ function importFromRYM() {
       );
     }
   });
+}
+
+/**
+ * Upload image and title data to first blank space
+ */
+function importFromImage() {
+  let index = chart.sources.indexOf('assets/images/blank.png');
+  chart.sources[index] = URL.createObjectURL($('#imgImport').get(0).files[0]);
+  chart.titles[index] = $('#imgTitle').val();
+  repaintChart();
 }
 
 /**
