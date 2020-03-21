@@ -445,9 +445,27 @@ function importFromRYM() {
  */
 function importFromImage() {
   let index = chart.sources.indexOf('assets/images/blank.png');
-  chart.sources[index] = URL.createObjectURL($('#imgImport').get(0).files[0]);
+  chart.sources[index] = 
+    $('#imgImportFileRadio').prop('checked')
+    ? URL.createObjectURL($('#imgImportFile').get(0).files[0])
+    : $('#imgImportURL').val()
+  ;
   chart.titles[index] = $('#imgTitle').val();
   repaintChart();
+}
+
+/**
+ * Switch between custom image import modes
+ * @param {Boolean} file - File or URL?
+ */
+function imgImportMode(file) {
+  if(file) {
+    $('#imgImportFileDiv').show();
+    $('#imgImportURLDiv').hide();
+  } else {
+    $('#imgImportURLDiv').show();
+    $('#imgImportFileDiv').hide();
+  }
 }
 
 /**
@@ -496,7 +514,7 @@ function outerPadding() {
   let padding = $('#outerPadding').val();
   chart.options.outerPadding = padding;
   $('#chart').css({padding: padding * 2});
-  $('#titles').css({paddingTop: padding * 2, paddingBottom: padding * 2, paddingRight: padding});
+  $('#titles').css({paddingTop: padding * 2, paddingBottom: padding * 2, paddingRight: padding * 1.5});
   $('#outerPaddingNum').html(padding);
 }
 
@@ -554,9 +572,9 @@ function backgroundColor() {
  */
 function chartItemString(name) {
   return `
-    <div class="chart-item" class="d-flex flex-row justify-content-between align-items-center">
-      <input type="checkbox" class="mr-2" onclick="selectChart(event)">
-      <input type="text" value="${name}" disabled>
+    <div class="chart-item d-flex flex-row justify-content-between align-items-center">
+      <input type="checkbox" onclick="selectChart(event)">
+      <input type="text" class="flex-grow-1 mx-2" value="${name}" disabled>
       <input 
         type="image" 
         class="mr-1 ml-auto" 
@@ -634,5 +652,7 @@ $(() => {
     $('#createChart').click();
   }
 
+  $('#imgImportURLDiv').hide();
+  $('#imgImportFileRadio').prop('checked', true);
   window.onresize = resize;
 });

@@ -296,8 +296,18 @@
                   </button>
                 </div>
                 <div class="modal-body">
-                  <label for="imgImport">Image File:</label><br>
-                  <input id="imgImport" type="file" accept="image/*" /><br>
+                  <input type="radio" name="imgImportRadio" id="imgImportFileRadio" onclick="imgImportMode(true)" />
+                  <label for="imgImportFileRadio">File</label>
+                  <input type="radio" name="imgImportRadio" id="imgImportURLRadio" onclick="imgImportMode(false)" />
+                  <label for="imgImportURLRadio">URL</label>
+                  <div id="imgImportFileDiv">
+                    <label for="imgImportFile">Image File:</label><br>
+                    <input id="imgImportFile" type="file" accept="image/*" />
+                  </div>
+                  <div id="imgImportURLDiv">
+                    <label for="imgImportURL">Image URL:</label><br>
+                    <input id="imgImportURL" type="text" />
+                  </div>
                   <label for="imgTitle" class="mt-3">Title:</label><br>
                   <input type="text" id="imgTitle" />
                 </div>
