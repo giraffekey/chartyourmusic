@@ -7783,10 +7783,11 @@ body {
   min-height: 100vh; }
 
 aside {
-  width: 25vw; }
+  min-width: 350px;
+  max-width: 350px; }
 
 main {
-  width: 75vw; }
+  min-width: 410px; }
 
 .hr-border {
   border: 1px dashed white; }
@@ -7856,19 +7857,21 @@ main {
   max-height: 25vh; }
 
 .chart-item {
-  height: 50px;
   background-color: white;
   color: black;
   margin-bottom: 15px;
-  padding: 20px; }
+  padding: 15px; }
+  .chart-item input[type=text] {
+    width: 60%; }
   .chart-item input:disabled {
     background: transparent;
     border: none;
     color: black; }
-  .chart-item.selected {
-    background: blue; }
   .chart-item:last-child {
     margin-bottom: 0; }
+
+input[type=image] {
+  width: 20px; }
 
 /**
  * The options section

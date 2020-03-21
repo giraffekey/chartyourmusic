@@ -1,5 +1,2 @@
-- Mobile friendliness (giraffe)
-
-+ Dropping on original location
-+ Fix issue with resizing while titles are overflowing
 + Movies and videogames
++ URL option for custom image

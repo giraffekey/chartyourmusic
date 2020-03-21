@@ -11,11 +11,12 @@ body {
 }
 
 aside {
-    width: 25vw;
+    min-width: 350px;
+    max-width: 350px;
 }
 
 main {
-    width: 75vw;
+    min-width: 410px;
 }
 
 .hr-border {

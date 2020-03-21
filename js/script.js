@@ -170,10 +170,10 @@ function repaintChart() {
       input.type = 'text';
       input.className = 'title';
       input.value = chart.titles[i];
-      input.style.width = input.value.length*0.6+'em';
+      input.style.width = input.value.length*0.7+'em';
       $(input).change((e) => {
         chart.titles[$('.title').index(e.target)] = e.target.value;
-        e.target.style.width = e.target.value.length*0.6+'em';
+        e.target.style.width = e.target.value.length*0.7+'em';
       });
       $('#titles').append(input);
     }
@@ -337,7 +337,6 @@ function loadChart(index) {
   $('#tiles').val(chart.options.length);
   $('#outerPadding').val(chart.options.outerPadding);
   $('#innerPadding').val(chart.options.innerPadding);
-
 
   $('#titleToggle').prop('checked', chart.options.titles);
   if(!chart.options.titles) {
@@ -524,9 +523,8 @@ function titleToggle() {
  * Change font of titles list
  */
 function changeFont() {
-  let font = $('#fonts').val() + ', sans-serif';
-  chart.options.font = font;
-  $('#titles').css('font-family', font);
+  chart.options.font = $('#fonts').val();
+  $('#titles').css('font-family', $('#fonts').val() + ', sans-serif');
 }
 
 /**
@@ -556,11 +554,18 @@ function backgroundColor() {
  */
 function chartItemString(name) {
   return `
-    <div class="chart-item d-flex flex-row justify-content-between align-items-center">
-      <input type="checkbox" onclick="selectChart(event)">
+    <div class="chart-item" class="d-flex flex-row justify-content-between align-items-center">
+      <input type="checkbox" class="mr-2" onclick="selectChart(event)">
       <input type="text" value="${name}" disabled>
-      <button onclick="renameChart(event)">R</button>
-      <button 
+      <input 
+        type="image" 
+        class="mr-1 ml-auto" 
+        src="assets/images/rename.svg" 
+        onclick="renameChart(event)"
+      >
+      <input
+        type="image"
+        src="assets/images/delete.svg"
         onclick="
           $('#deleteTitle').html(
             'Are you sure you want to delete ' +
@@ -570,7 +575,7 @@ function chartItemString(name) {
         "
         data-toggle="modal"
         data-target="#deleteChartModal"
-      >🗑</button>
+      >
     </div>
   `;
 }
