@@ -1,6 +1,6 @@
 # ChartYourMusic
  
-This project was inspired by neverendingchartrendering.org. You can use it to create charts of your favorite things to listen to, download it as an image, and share it with your internet pals!
+This project was inspired by [neverendingchartrendering.org](neverendingchartrendering.org). You can use it to create a chart of your favorite things to listen to, download it as an image, and share it with your internet pals!
 
 The site is up and running [here](https://giraffekey.github.io/chart-your-music/).
 
