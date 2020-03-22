@@ -315,7 +315,7 @@ function newChart() {
  * @param {Number} index
  */
 function loadChart(index) {
-  charts[chartIndex] = chart;
+  if(chartIndex > -1) charts[chartIndex] = chart;
   chart = charts[index];
   chartIndex = index;
 
@@ -514,7 +514,7 @@ function outerPadding() {
   let padding = $('#outerPadding').val();
   chart.options.outerPadding = padding;
   $('#chart').css({padding: padding * 2});
-  $('#titles').css({paddingTop: padding * 2, paddingBottom: padding * 2, paddingRight: padding * 1.5});
+  $('#titles').css({paddingTop: padding * 2, paddingBottom: padding * 2, paddingRight: padding * 2});
   $('#outerPaddingNum').html(padding);
 }
 
@@ -622,9 +622,10 @@ function deleteChart(e) {
   if(charts.length > 0) {
     loadChart(Math.min(chartIndex, charts.length-1));
   } else {
+    chartIndex = -1;
     $('#createChart').click();
   }
-  $(div).remove();
+  div.remove();
 }
 
 /**
