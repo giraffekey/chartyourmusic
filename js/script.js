@@ -166,15 +166,14 @@ function repaintChart() {
   $('#titles').html('');
   for(let i = 0; i < images.length; i++) {
     if(chart.titles[i].length > 0) {
-      console.log(chart.titles[i]);
       let input = document.createElement('input');
       input.type = 'text';
       input.className = 'title';
       input.value = chart.titles[i];
-      input.style.width = input.value.length*0.7+'em';
+      input.style.width = input.value.length*(0.8-input.value.length/200)+'em';
       $(input).change((e) => {
         chart.titles[$('.title').index(e.target)] = e.target.value;
-        e.target.style.width = e.target.value.length*0.7+'em';
+        e.target.style.width = e.target.value.length*(0.8-input.value.length/200)+'em';
       });
       $('#titles').append(input);
     }
@@ -335,6 +334,8 @@ function loadChart(index) {
 
   $('#rows').val(chart.options.rows);
   $('#cols').val(chart.options.cols);
+  $('#rowsNum').val(chart.options.rows);
+  $('#colsNum').val(chart.options.cols);
   $('#tiles').val(chart.options.length);
   $('#outerPadding').val(chart.options.outerPadding);
   $('#innerPadding').val(chart.options.innerPadding);
@@ -350,6 +351,7 @@ function loadChart(index) {
   chartType(chart.options.grid);
   changeFont();
   background();
+  repaintChart();
 }
 
 /**
@@ -475,7 +477,11 @@ function imgImportMode(file) {
  */
 function chartType(grid) {
   if(grid) {
-    $('#chartContainer').css({width: Math.min(100, 40 + 10 * chart.options.cols) + '%'});
+    $('#chartContainer').css({width: (
+      chart.options.titles ? 100
+      : Math.min(100, 40 + 10 * chart.options.cols)
+      ) + '%'
+    });
     $('#chartSize').show();
     $('#chartLength').hide();
   } else {
@@ -535,6 +541,12 @@ function innerPadding() {
 function titleToggle() {
   $('#titles').toggle();
   chart.options.titles = !chart.options.titles;
+  if(chart.options.grid) {
+    if(chart.options.titles)
+      $('#chartContainer').css({width: '100%'});
+    else
+      $('#chartContainer').css({width: Math.min(100, 40 + 10 * chart.options.cols) + '%'});
+  }
   resize();
   storeToJSON();
 }
@@ -661,6 +673,4 @@ $(() => {
   $('#imgImportURLDiv').hide();
   $('#imgImportFileRadio').prop('checked', true);
   window.onresize = resize;
-
-  repaintChart();
 });
