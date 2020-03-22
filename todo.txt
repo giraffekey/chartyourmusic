@@ -1,7 +1,1 @@
-+ Movies and videogames
-+ Fix titles bug
-+ Fix data duplication when single chart
 + Correct file extension on download
-+ Change button into rendering progress bar during download
-
-+ Add ability to re-order charts

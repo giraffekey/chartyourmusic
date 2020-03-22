@@ -166,6 +166,7 @@ function repaintChart() {
   $('#titles').html('');
   for(let i = 0; i < images.length; i++) {
     if(chart.titles[i].length > 0) {
+      console.log(chart.titles[i]);
       let input = document.createElement('input');
       input.type = 'text';
       input.className = 'title';
@@ -245,9 +246,9 @@ function generateChart() {
         // dragIndex is necessary because location of source image changes
         if(dragIndex === -1) dragIndex = images.index(ui.draggable);
         let moveto = images.index(e.target);
-        let src = chart.sources.splice(dragIndex, 1);
+        let src = chart.sources.splice(dragIndex, 1)[0];
         chart.sources.splice(moveto, 0, src);
-        let title = chart.titles.splice(dragIndex, 1);
+        let title = chart.titles.splice(dragIndex, 1)[0];
         chart.titles.splice(moveto, 0, title);
         dragIndex = moveto;
         repaintChart();
@@ -535,6 +536,7 @@ function titleToggle() {
   $('#titles').toggle();
   chart.options.titles = !chart.options.titles;
   resize();
+  storeToJSON();
 }
 
 /**
@@ -543,6 +545,7 @@ function titleToggle() {
 function changeFont() {
   chart.options.font = $('#fonts').val();
   $('#titles').css('font-family', $('#fonts').val() + ', sans-serif');
+  storeToJSON();
 }
 
 /**
@@ -555,6 +558,7 @@ function background() {
   }
   chart.options.background = val;
   $('#chartContainer').css('background', val);
+  storeToJSON();
 }
 
 /**
@@ -565,6 +569,7 @@ function backgroundColor() {
   chart.options.background = val;
   $('#background').val(val);
   $('#chartContainer').css('background', val);
+  storeToJSON();
 }
 
 /**
@@ -656,4 +661,6 @@ $(() => {
   $('#imgImportURLDiv').hide();
   $('#imgImportFileRadio').prop('checked', true);
   window.onresize = resize;
+
+  repaintChart();
 });
