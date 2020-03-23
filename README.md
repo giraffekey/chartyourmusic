@@ -14,7 +14,7 @@ There are multiple things you can help with, such as:
 - Improving code performance
 
 Just fork the repo and get working!  
-Don't want to program? Also consider opening up [issues](https://github.com/GiraffeKey/chart-your-music/issues) for any bug notifications or suggested features.
+Don't want to program? Also consider opening up [issues](https://github.com/GiraffeKey/chartyourmusic/issues) for any bug notifications or suggested features.
 
 ## Importing from RateYourMusic
 
