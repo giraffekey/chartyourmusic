@@ -334,8 +334,8 @@ function loadChart(index) {
 
   $('#rows').val(chart.options.rows);
   $('#cols').val(chart.options.cols);
-  $('#rowsNum').val(chart.options.rows);
-  $('#colsNum').val(chart.options.cols);
+  $('#rowsNum').html(chart.options.rows);
+  $('#colsNum').html(chart.options.cols);
   $('#tiles').val(chart.options.length);
   $('#outerPadding').val(chart.options.outerPadding);
   $('#innerPadding').val(chart.options.innerPadding);
