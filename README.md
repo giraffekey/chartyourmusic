@@ -2,7 +2,7 @@
  
 This project was inspired by [neverendingchartrendering.org](neverendingchartrendering.org). It was created as an open source alternative to the site with additional features and better support. The app is still very open to further development and will likely improve even further in the future. Contributions are appreciated and encouraged.
 
-The site is up and running [here](https://giraffekey.github.io/chart-your-music/).
+The site is up and running [here](https://giraffekey.github.io/chartyourmusic/).
 
 ## Contributing
 
@@ -14,7 +14,7 @@ There are multiple things you can help with, such as:
 - Improving code performance
 
 Just fork the repo and get working!  
-Don't want to program? Also consider opening up [issues](https://github.com/GiraffeKey/chart-your-music/issues) for any bug notifications or suggested features.
+Don't want to program? Also consider opening up [issues](https://github.com/GiraffeKey/chartyourmusic/issues) for any bug notifications or suggested features.
 
 ## Importing from RateYourMusic
 
