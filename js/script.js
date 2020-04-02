@@ -142,9 +142,9 @@ function chartToImage(ext) {
 
       document.body.appendChild(canvas);
       if(ext === 'jpg')
-        Canvas2Image.saveAsJPEG(canvas);
+        Canvas2Image.saveAsJPEG(canvas, chart.name);
       else if(ext === 'png')
-        Canvas2Image.saveAsPNG(canvas);
+        Canvas2Image.saveAsPNG(canvas, chart.name);
       document.body.removeChild(canvas);
 
       $('#chartContainer').css({border: '1px solid white'});
