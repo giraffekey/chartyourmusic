@@ -3,32 +3,32 @@
  */
 
 body {
-    background-color: black;
+  background-color: black;
 }
 
 #container {
-    min-height: 100vh;
+  min-height: 100vh;
 }
 
 aside {
-    min-width: 350px;
-    max-width: 350px;
+  min-width: 350px;
+  max-width: 350px;
 }
 
 main {
-    min-width: 410px;
+  min-width: 410px;
 }
 
 .hr-border {
-    border: 1px dashed white;
+  border: 1px dashed white;
 }
 
 #results {
-    flex-basis: 10px;
-    img {
-        width: 50%;
-        &:hover {
-            cursor: pointer;
-        }
+  flex-basis: 10px;
+  img {
+    width: 50%;
+    &:hover {
+      cursor: pointer;
     }
+  }
 }

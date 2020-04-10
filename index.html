@@ -1,63 +1,79 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <meta charset="utf-8">
-    <meta name="viewport" width="device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
+    <meta charset="utf-8" />
+    <meta
+      name="viewport"
+      width="device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0"
+    />
 
     <title>ChartYourMusic</title>
 
     <!-- CSS stylesheet(s) -->
-    <link rel="stylesheet" type="text/css" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css" />
+    <link
+      rel="stylesheet"
+      type="text/css"
+      href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css"
+    />
     <link rel="stylesheet" type="text/css" href="css/index.css" />
   </head>
 
   <body>
     <div id="container" class="d-flex flex-row">
-
       <aside class="d-flex flex-column py-4 pl-4 text-white">
-
         <!-- Chart List -->
         <div id="chartList" class="overflow-auto text-center">
-          <button 
-            id="createChart" 
-            class="btn btn-light btn-sm" 
+          <button
+            id="createChart"
+            class="btn btn-light btn-sm"
             data-toggle="modal"
             data-target="#createChartModal"
-          >Create New Chart</button>
+          >
+            Create New Chart
+          </button>
         </div>
 
         <!-- New Chart Modal -->
-        <div 
-          class="modal fade" 
-          id="createChartModal" 
-          tabindex="-1" 
-          role="dialog" 
-          aria-labelledby="createChartModal" 
+        <div
+          class="modal fade"
+          id="createChartModal"
+          tabindex="-1"
+          role="dialog"
+          aria-labelledby="createChartModal"
           aria-hidden="true"
         >
           <div class="modal-dialog" role="document">
             <div class="modal-content">
               <div class="modal-header">
                 <h5 class="modal-title">Create New Chart</h5>
-                <button class="close" data-dismiss="modal" aria-label="Close" onClick="storeToJSON()">
+                <button
+                  class="close"
+                  data-dismiss="modal"
+                  aria-label="Close"
+                  onClick="storeToJSON()"
+                >
                   <span aria-hidden="true">&times;</span>
                 </button>
               </div>
               <div class="modal-body">
-                <label for="chartName">Name of Chart:</label><br>
-                <input type="text" id="chartName" onfocus="checkEnter()">
+                <label for="chartName">Name of Chart:</label><br />
+                <input type="text" id="chartName" onfocus="checkEnter()" />
               </div>
               <div class="modal-footer">
-                <button 
-                  class="btn btn-light text-dark rounded-0"
-                  data-dismiss="modal"
-                >Cancel</button>
                 <button
-                  id="btnCreate" 
                   class="btn btn-light text-dark rounded-0"
-                  onclick="newChart()" 
                   data-dismiss="modal"
-                >Create</button>
+                >
+                  Cancel
+                </button>
+                <button
+                  id="btnCreate"
+                  class="btn btn-light text-dark rounded-0"
+                  onclick="newChart()"
+                  data-dismiss="modal"
+                >
+                  Create
+                </button>
               </div>
             </div>
           </div>
@@ -65,37 +81,46 @@
 
         <!-- Delete Chart Confirmation -->
         <div
-          class="modal fade" 
-          id="deleteChartModal" 
-          tabindex="-1" 
-          role="dialog" 
-          aria-labelledby="deleteChartModal" 
+          class="modal fade"
+          id="deleteChartModal"
+          tabindex="-1"
+          role="dialog"
+          aria-labelledby="deleteChartModal"
           aria-hidden="true"
         >
           <div class="modal-dialog" role="document">
             <div class="modal-content">
               <div class="modal-header">
                 <h5 id="deleteTitle" class="modal-title"></h5>
-                <button class="close" data-dismiss="modal" aria-label="Close" onClick="storeToJSON()">
+                <button
+                  class="close"
+                  data-dismiss="modal"
+                  aria-label="Close"
+                  onClick="storeToJSON()"
+                >
                   <span aria-hidden="true">&times;</span>
                 </button>
               </div>
               <div class="modal-footer">
-                <button 
+                <button
                   class="btn btn-light text-dark rounded-0"
                   data-dismiss="modal"
-                >No</button>
+                >
+                  No
+                </button>
                 <button
                   id="btnDelete"
                   class="btn btn-light text-dark rounded-0"
                   data-dismiss="modal"
-                >Yes</button>
+                >
+                  Yes
+                </button>
               </div>
             </div>
           </div>
         </div>
 
-        <hr class="hr-border w-100">
+        <hr class="hr-border w-100" />
 
         <!-- Options -->
         <p>
@@ -108,85 +133,164 @@
             aria-expanded="false"
             aria-controls="options"
             onclick="optionsArrow()"
-          >Options &#9660;</a>
+            >Options &#9660;</a
+          >
         </p>
         <section class="collapse" id="options">
           <div>
             <label for="gridRadio">Grid</label>
-            <input type="radio" id="gridRadio" name="chartType" onclick="chartType(true)">
+            <input
+              type="radio"
+              id="gridRadio"
+              name="chartType"
+              onclick="chartType(true)"
+            />
             <label for="collageRadio">Collage</label>
-            <input type="radio" id="collageRadio" name="chartType" onclick="chartType(false)">
+            <input
+              type="radio"
+              id="collageRadio"
+              name="chartType"
+              onclick="chartType(false)"
+            />
           </div>
           <table id="chartSize">
             <tr>
               <td><label for="rows">Rows</label></td>
-              <td><input type="range" id="rows" min="1" max="12" oninput="chartSize()"></td>
+              <td>
+                <input
+                  type="range"
+                  id="rows"
+                  min="1"
+                  max="12"
+                  oninput="chartSize()"
+                />
+              </td>
               <td id="rowsNum"></td>
             </tr>
             <tr>
               <td><label for="cols">Cols</label></td>
-              <td><input type="range" id="cols" min="1" max="12" oninput="chartSize()"></td>
+              <td>
+                <input
+                  type="range"
+                  id="cols"
+                  min="1"
+                  max="12"
+                  oninput="chartSize()"
+                />
+              </td>
               <td id="colsNum"></td>
             </tr>
           </table>
           <div id="chartLength">
             <label for="tiles">Tiles</label>
-            <input type="number" id="tiles" min="1" max="144" onchange="chartLength()">
+            <input
+              type="number"
+              id="tiles"
+              min="1"
+              max="144"
+              onchange="chartLength()"
+            />
           </div>
           <table>
             <tr>
               <td><label for="outerPadding">Outer Padding</label></td>
-              <td><input type="range" id="outerPadding" min="0" max="30" oninput="outerPadding()"></td>
+              <td>
+                <input
+                  type="range"
+                  id="outerPadding"
+                  min="0"
+                  max="30"
+                  oninput="outerPadding()"
+                />
+              </td>
               <td id="outerPaddingNum"></td>
             </tr>
             <tr>
               <td><label for="innerPadding">Inner Padding</label></td>
-              <td><input type="range" id="innerPadding" min="0" max="20" oninput="innerPadding()"></td>
+              <td>
+                <input
+                  type="range"
+                  id="innerPadding"
+                  min="0"
+                  max="20"
+                  oninput="innerPadding()"
+                />
+              </td>
               <td id="innerPaddingNum"></td>
             </tr>
           </table>
-          <input type="checkbox" id="titleToggle" onclick="titleToggle()">
-          <label for="titleToggle">Album Titles</label><br>
+          <input type="checkbox" id="titleToggle" onclick="titleToggle()" />
+          <label for="titleToggle">Album Titles</label><br />
           <label for="fonts">Font:</label>
           <select id="fonts" onchange="changeFont()">
             <option value="Arial">Arial</option>
             <option value="Courier">Courier</option>
-            <option value="'Franklin Gothic Medium'">Franklin Gothic Medium</option>
+            <option value="'Franklin Gothic Medium'"
+              >Franklin Gothic Medium</option
+            >
             <option value="Georgia">Georgia</option>
             <option value="Helvetica">Helvetica</option>
             <option value="'Proxima Nova'">Proxima Nova</option>
             <option value="'Times New Roman'">Times New Roman</option>
           </select>
-          <div class="d-flex flex-row justify-content-between align-items-center">
+          <div
+            class="d-flex flex-row justify-content-between align-items-center"
+          >
             <label for="background">Background: </label>
-            <input type="text" id="background" class="w-50" placeholder="URL / Color" onchange="background()">
-            <input type="color" id="colorPicker" onchange="backgroundColor()">
+            <input
+              type="text"
+              id="background"
+              class="w-50"
+              placeholder="URL / Color"
+              onchange="background()"
+            />
+            <input type="color" id="colorPicker" onchange="backgroundColor()" />
           </div>
         </section>
 
-        <hr class="hr-border w-100">
+        <hr class="hr-border w-100" />
 
         <!-- Search Engine -->
-        <div class="d-flex flex-row justify-content-between align-items-center mb-2">
+        <div
+          class="d-flex flex-row justify-content-between align-items-center mb-2"
+        >
           <span>Album Search:</span>
-          <button class="btn btn-light btn-sm" onclick="getAlbums()">Submit</button>
+          <button class="btn btn-light btn-sm" onclick="getAlbums()">
+            Submit
+          </button>
         </div>
         <div class="d-flex flex-row mb-3">
-          <input id="artist" type="text" placeholder="Artist" class="w-50" onfocus="checkEnter()">
-          <input id="album" type="text" placeholder="Album" class="w-50" onfocus="checkEnter()">
+          <input
+            id="artist"
+            type="text"
+            placeholder="Artist"
+            class="w-50"
+            onfocus="checkEnter()"
+          />
+          <input
+            id="album"
+            type="text"
+            placeholder="Album"
+            class="w-50"
+            onfocus="checkEnter()"
+          />
         </div>
-        <div 
-          id="results" 
+        <div
+          id="results"
           class="d-flex flex-row flex-wrap flex-grow-1 flex-shrink-1 overflow-auto"
         ></div>
-
       </aside>
 
       <main class="p-4 flex-grow-1">
-
         <header class="d-flex flex-row justify-content-end mb-4">
           <!-- Export Button -->
-          <button id="exportJSON" class="btn btn-light rounded-0 mr-2" onclick="exportToJSON()">Export to JSON</button>
+          <button
+            id="exportJSON"
+            class="btn btn-light rounded-0 mr-2"
+            onclick="exportToJSON()"
+          >
+            Export to JSON
+          </button>
 
           <!-- Import Button -->
           <div class="dropdown">
@@ -199,129 +303,187 @@
             >
               Import
             </button>
-            <ul class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuButton">
-              <li class="dropdown-item" data-toggle="modal" data-target="#jsonImportModal">...from JSON</li>
-              <li class="dropdown-item" data-toggle="modal" data-target="#rymImportModal">...from RateYourMusic</li>
-              <li class="dropdown-item" data-toggle="modal" data-target="#imgImportModal">...from Custom Image</li>
+            <ul
+              class="dropdown-menu dropdown-menu-right"
+              aria-labelledby="dropdownMenuButton"
+            >
+              <li
+                class="dropdown-item"
+                data-toggle="modal"
+                data-target="#jsonImportModal"
+              >
+                ...from JSON
+              </li>
+              <li
+                class="dropdown-item"
+                data-toggle="modal"
+                data-target="#rymImportModal"
+              >
+                ...from RateYourMusic
+              </li>
+              <li
+                class="dropdown-item"
+                data-toggle="modal"
+                data-target="#imgImportModal"
+              >
+                ...from Custom Image
+              </li>
             </ul>
           </div>
 
           <!-- JSON Import Modal -->
-          <div 
-            class="modal fade" 
-            id="jsonImportModal" 
-            tabindex="-1" 
-            role="dialog" 
-            aria-labelledby="jsonImportModal" 
+          <div
+            class="modal fade"
+            id="jsonImportModal"
+            tabindex="-1"
+            role="dialog"
+            aria-labelledby="jsonImportModal"
             aria-hidden="true"
           >
             <div class="modal-dialog" role="document">
               <div class="modal-content">
                 <div class="modal-header">
                   <h5 class="modal-title">JSON Import Data</h5>
-                  <button class="close" data-dismiss="modal" aria-label="Close" onClick="storeToJSON()">
+                  <button
+                    class="close"
+                    data-dismiss="modal"
+                    aria-label="Close"
+                    onClick="storeToJSON()"
+                  >
                     <span aria-hidden="true">&times;</span>
                   </button>
                 </div>
                 <div class="modal-body">
-                  <input id="jsonImport" type="file"/>
+                  <input id="jsonImport" type="file" />
                 </div>
                 <div class="modal-footer">
-                  <button 
-                    class="btn btn-light text-dark rounded-0"
-                    data-dismiss="modal"
-                  >Cancel</button>
                   <button
-                    id="btnCreate" 
                     class="btn btn-light text-dark rounded-0"
-                    onclick="importFromJSON()" 
                     data-dismiss="modal"
-                  >Import</button>
+                  >
+                    Cancel
+                  </button>
+                  <button
+                    id="btnCreate"
+                    class="btn btn-light text-dark rounded-0"
+                    onclick="importFromJSON()"
+                    data-dismiss="modal"
+                  >
+                    Import
+                  </button>
                 </div>
               </div>
             </div>
           </div>
 
           <!-- RYM Import Modal -->
-          <div 
-            class="modal fade" 
-            id="rymImportModal" 
-            tabindex="-1" 
-            role="dialog" 
-            aria-labelledby="rymImportModal" 
+          <div
+            class="modal fade"
+            id="rymImportModal"
+            tabindex="-1"
+            role="dialog"
+            aria-labelledby="rymImportModal"
             aria-hidden="true"
           >
             <div class="modal-dialog" role="document">
               <div class="modal-content">
                 <div class="modal-header">
                   <h5 class="modal-title">RYM Import Data</h5>
-                  <button class="close" data-dismiss="modal" aria-label="Close" onClick="storeToJSON()">
+                  <button
+                    class="close"
+                    data-dismiss="modal"
+                    aria-label="Close"
+                    onClick="storeToJSON()"
+                  >
                     <span aria-hidden="true">&times;</span>
                   </button>
                 </div>
                 <div class="modal-body">
-                  <input id="csvImport" type="file"/>
+                  <input id="csvImport" type="file" />
                 </div>
                 <div class="modal-footer">
-                  <button 
-                    class="btn btn-light text-dark rounded-0"
-                    data-dismiss="modal"
-                  >Cancel</button>
                   <button
-                    id="btnCreate" 
                     class="btn btn-light text-dark rounded-0"
-                    onclick="importFromRYM()" 
                     data-dismiss="modal"
-                  >Import</button>
+                  >
+                    Cancel
+                  </button>
+                  <button
+                    id="btnCreate"
+                    class="btn btn-light text-dark rounded-0"
+                    onclick="importFromRYM()"
+                    data-dismiss="modal"
+                  >
+                    Import
+                  </button>
                 </div>
               </div>
             </div>
           </div>
 
           <!-- Custom Image Modal -->
-          <div 
-            class="modal fade" 
-            id="imgImportModal" 
-            tabindex="-1" 
-            role="dialog" 
-            aria-labelledby="imgImportModal" 
+          <div
+            class="modal fade"
+            id="imgImportModal"
+            tabindex="-1"
+            role="dialog"
+            aria-labelledby="imgImportModal"
             aria-hidden="true"
           >
             <div class="modal-dialog" role="document">
               <div class="modal-content">
                 <div class="modal-header">
                   <h5 class="modal-title">Custom Image</h5>
-                  <button class="close" data-dismiss="modal" aria-label="Close" onClick="storeToJSON()">
+                  <button
+                    class="close"
+                    data-dismiss="modal"
+                    aria-label="Close"
+                    onClick="storeToJSON()"
+                  >
                     <span aria-hidden="true">&times;</span>
                   </button>
                 </div>
                 <div class="modal-body">
-                  <input type="radio" name="imgImportRadio" id="imgImportFileRadio" onclick="imgImportMode(true)" />
+                  <input
+                    type="radio"
+                    name="imgImportRadio"
+                    id="imgImportFileRadio"
+                    onclick="imgImportMode(true)"
+                  />
                   <label for="imgImportFileRadio">File</label>
-                  <input type="radio" name="imgImportRadio" id="imgImportURLRadio" onclick="imgImportMode(false)" />
+                  <input
+                    type="radio"
+                    name="imgImportRadio"
+                    id="imgImportURLRadio"
+                    onclick="imgImportMode(false)"
+                  />
                   <label for="imgImportURLRadio">URL</label>
                   <div id="imgImportFileDiv">
-                    <label for="imgImportFile">Image File:</label><br>
+                    <label for="imgImportFile">Image File:</label><br />
                     <input id="imgImportFile" type="file" accept="image/*" />
                   </div>
                   <div id="imgImportURLDiv">
-                    <label for="imgImportURL">Image URL:</label><br>
+                    <label for="imgImportURL">Image URL:</label><br />
                     <input id="imgImportURL" type="text" />
                   </div>
-                  <label for="imgTitle" class="mt-3">Title:</label><br>
+                  <label for="imgTitle" class="mt-3">Title:</label><br />
                   <input type="text" id="imgTitle" />
                 </div>
                 <div class="modal-footer">
-                  <button 
-                    class="btn btn-light text-dark rounded-0"
-                    data-dismiss="modal"
-                  >Cancel</button>
                   <button
-                    id="btnCreate" 
                     class="btn btn-light text-dark rounded-0"
-                    onclick="importFromImage()" 
                     data-dismiss="modal"
-                  >Import</button>
+                  >
+                    Cancel
+                  </button>
+                  <button
+                    id="btnCreate"
+                    class="btn btn-light text-dark rounded-0"
+                    onclick="importFromImage()"
+                    data-dismiss="modal"
+                  >
+                    Import
+                  </button>
                 </div>
               </div>
             </div>
@@ -338,20 +500,28 @@
             >
               Download
             </button>
-            <ul class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuButton">
-              <li class="dropdown-item" onclick="chartToImage('jpg')">...as JPG</li>
-              <li class="dropdown-item" onclick="chartToImage('png')">...as PNG</li>
+            <ul
+              class="dropdown-menu dropdown-menu-right"
+              aria-labelledby="dropdownMenuButton"
+            >
+              <li class="dropdown-item" onclick="chartToImage('jpg')">
+                ...as JPG
+              </li>
+              <li class="dropdown-item" onclick="chartToImage('png')">
+                ...as PNG
+              </li>
             </ul>
           </div>
-
         </header>
 
         <!-- Chart -->
         <div id="chartContainer" class="d-flex flex-row mx-auto">
-          <div id="chart" class="d-flex flex-row flex-wrap justify-content-center flex-grow-1"></div>
+          <div
+            id="chart"
+            class="d-flex flex-row flex-wrap justify-content-center flex-grow-1"
+          ></div>
           <div id="titles"></div>
         </div>
-
       </main>
     </div>
 

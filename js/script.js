@@ -26,10 +26,8 @@ let maxHeight = false;
  */
 function optionsArrow() {
   let arrow = $('#optionsArrow');
-  if (arrow.html() === 'Options ▼')
-    arrow.html('Options ▲');
-  else
-    arrow.html('Options ▼');
+  if (arrow.html() === 'Options ▼') arrow.html('Options ▲');
+  else arrow.html('Options ▼');
 }
 
 /**
@@ -44,12 +42,12 @@ function resize() {
 
 /**
  * Ajax request
- * @param {String} url 
- * @param {Function} success 
+ * @param {String} url
+ * @param {Function} success
  */
 function fetch(url, success) {
   let http = new XMLHttpRequest();
-  http.onreadystatechange = function() {
+  http.onreadystatechange = function () {
     if (this.readyState == 4 && this.status == 200) {
       success(this.responseText);
     }
@@ -59,7 +57,7 @@ function fetch(url, success) {
 }
 
 function checkEnter() {
-  $('#album, #artist').on('keypress', function(e) {
+  $('#album, #artist').on('keypress', function (e) {
     if (e.which === 13) {
       getAlbums();
     }
@@ -80,43 +78,44 @@ function getAlbums() {
   $('#results').html('');
   // Avoids duplicate urls in results
   let sourceList = [];
-  let query = 
-    (album ? 'release:'+album : '') +
+  let query =
+    (album ? 'release:' + album : '') +
     (album && artist ? ' AND ' : '') +
-    (artist ? 'artist:'+artist : '')
-  ;
+    (artist ? 'artist:' + artist : '');
   // Retrieve list of albums that match the search input
-  fetch(`https://musicbrainz.org/ws/2/release?query=${query}&limit=40?inc=artist-credit&fmt=json`,
-  resp => {
-    let releases = JSON.parse(resp).releases;
-    for (let i = 0; i < releases.length; i++) {
-      let rel = releases[i];
-      fetch('https://coverartarchive.org/release/' + rel['id'],
-      resp => {
-        JSON.parse(resp).images.forEach(image => {
-          let source = image['image'].replace('http:/', 'https:/');
-          if(!sourceList.includes(source)) {
-            let img = document.createElement('img');
-            img.src = source;
-            img.title = rel['artist-credit'][0]['name'] + ' - ' + rel['title'];
-            img.className = 'result';
-            $(img).draggable({
-              appendTo: 'body',
-              zIndex: 10,
-              helper: 'clone',
-              start: (e, ui) => {
-                // Fixes issue where dragged image is much larger than source image
-                let size = $('#results').width() / 2;
-                $(ui.helper).css({width: size, height: size});
-              }
-            });
-            $(img).css({height: $('#results').width()/2});
-            $('#results').append(img);
-          }
+  fetch(
+    `https://musicbrainz.org/ws/2/release?query=${query}&limit=40?inc=artist-credit&fmt=json`,
+    (resp) => {
+      let releases = JSON.parse(resp).releases;
+      for (let i = 0; i < releases.length; i++) {
+        let rel = releases[i];
+        fetch('https://coverartarchive.org/release/' + rel['id'], (resp) => {
+          JSON.parse(resp).images.forEach((image) => {
+            let source = image['image'].replace('http:/', 'https:/');
+            if (!sourceList.includes(source)) {
+              let img = document.createElement('img');
+              img.src = source;
+              img.title =
+                rel['artist-credit'][0]['name'] + ' - ' + rel['title'];
+              img.className = 'result';
+              $(img).draggable({
+                appendTo: 'body',
+                zIndex: 10,
+                helper: 'clone',
+                start: (e, ui) => {
+                  // Fixes issue where dragged image is much larger than source image
+                  let size = $('#results').width() / 2;
+                  $(ui.helper).css({ width: size, height: size });
+                }
+              });
+              $(img).css({ height: $('#results').width() / 2 });
+              $('#results').append(img);
+            }
+          });
         });
-      });
+      }
     }
-  });
+  );
 }
 
 /**
@@ -124,32 +123,30 @@ function getAlbums() {
  * @param {String} ext - png or jpg
  */
 function chartToImage(ext) {
-  $('#chartContainer').css({border: 'none'});
-  html2canvas(document.getElementById('chartContainer'), {useCORS: true}).then(
-    (canvas) => {
-      let context = canvas.getContext('2d');
-      let images = $('#chart img');
+  $('#chartContainer').css({ border: 'none' });
+  html2canvas(document.getElementById('chartContainer'), {
+    useCORS: true
+  }).then((canvas) => {
+    let context = canvas.getContext('2d');
+    let images = $('#chart img');
 
-      for(let i = 0; i < images.length; i++) {
-        if(chart.sources[i] !== 'assets/images/blank.png') {
-          let img = new Image();
-          img.src = chart.sources[i];
-          let x = $(images[i]).position().left;
-          let y = $(images[i]).position().top;
-          context.drawImage(img, x, y);
-        }
+    for (let i = 0; i < images.length; i++) {
+      if (chart.sources[i] !== 'assets/images/blank.png') {
+        let img = new Image();
+        img.src = chart.sources[i];
+        let x = $(images[i]).position().left;
+        let y = $(images[i]).position().top;
+        context.drawImage(img, x, y);
       }
-
-      document.body.appendChild(canvas);
-      if(ext === 'jpg')
-        Canvas2Image.saveAsJPEG(canvas, chart.name);
-      else if(ext === 'png')
-        Canvas2Image.saveAsPNG(canvas, chart.name);
-      document.body.removeChild(canvas);
-
-      $('#chartContainer').css({border: '1px solid white'});
     }
-  );
+
+    document.body.appendChild(canvas);
+    if (ext === 'jpg') Canvas2Image.saveAsJPEG(canvas, chart.name);
+    else if (ext === 'png') Canvas2Image.saveAsPNG(canvas, chart.name);
+    document.body.removeChild(canvas);
+
+    $('#chartContainer').css({ border: '1px solid white' });
+  });
 }
 
 /**
@@ -157,30 +154,32 @@ function chartToImage(ext) {
  */
 function repaintChart() {
   let images = $('#chart img');
-  for(let i = 0; i < images.length; i++) {
+  for (let i = 0; i < images.length; i++) {
     images.get(i).src = chart.sources[i];
   }
 
   let height = $('#chartContainer').height();
-  
+
   $('#titles').html('');
-  for(let i = 0; i < images.length; i++) {
-    if(chart.titles[i].length > 0) {
+  for (let i = 0; i < images.length; i++) {
+    if (chart.titles[i].length > 0) {
       let input = document.createElement('input');
       input.type = 'text';
       input.className = 'title';
       input.value = chart.titles[i];
-      input.style.width = input.value.length*(0.8-input.value.length/200)+'em';
+      input.style.width =
+        input.value.length * (0.8 - input.value.length / 200) + 'em';
       $(input).change((e) => {
         chart.titles[$('.title').index(e.target)] = e.target.value;
-        e.target.style.width = e.target.value.length*(0.8-input.value.length/200)+'em';
+        e.target.style.width =
+          e.target.value.length * (0.8 - input.value.length / 200) + 'em';
       });
       $('#titles').append(input);
     }
   }
 
-  if($('#chartContainer').height() > height && !maxHeight) {
-    $('#chart').css({maxHeight: height});
+  if ($('#chartContainer').height() > height && !maxHeight) {
+    $('#chart').css({ maxHeight: height });
     maxHeight = true;
   }
 
@@ -192,29 +191,29 @@ function repaintChart() {
  */
 function generateChart() {
   let innerHTML = '';
-  let length = 
-    chart.options.grid 
-    ? chart.options.rows * chart.options.cols 
-    : chart.options.length
-  ;
-  for(let i = 0; i < length; i++) {
+  let length = chart.options.grid
+    ? chart.options.rows * chart.options.cols
+    : chart.options.length;
+  for (let i = 0; i < length; i++) {
     // Makes tiles get smaller as they go down unless chart is in a grid
     let tile_n = 'tile-1';
-    if(!chart.options.grid) {
-      if(i >= 52) tile_n = 'tile-4';
-      else if(i >= 22) tile_n = 'tile-3';
-      else if(i >= 10) tile_n = 'tile-2';
+    if (!chart.options.grid) {
+      if (i >= 52) tile_n = 'tile-4';
+      else if (i >= 22) tile_n = 'tile-3';
+      else if (i >= 10) tile_n = 'tile-2';
     }
 
     innerHTML += `<img class="tile ${tile_n}" src="${chart.sources[i]}"`;
-    if(tile_n === 'tile-1')
-      innerHTML += ` style="width: ${chart.options.grid ? 100 / chart.options.cols : 20}%"`
+    if (tile_n === 'tile-1')
+      innerHTML += ` style="width: ${
+        chart.options.grid ? 100 / chart.options.cols : 20
+      }%"`;
     innerHTML += '>';
   }
   $('#chart').html(innerHTML);
 
   // Clear tile on double click
-  $('.tile').dblclick(function(e) {
+  $('.tile').dblclick(function (e) {
     let index = $('#chart img').index(e.target);
     chart.sources[index] = 'assets/images/blank.png';
     chart.titles[index] = '';
@@ -227,12 +226,12 @@ function generateChart() {
     // Another tile? create visual drop effect
     drop: (e, ui) => {
       let images = $('#chart img');
-      if($(ui.draggable).hasClass('result')) {
+      if ($(ui.draggable).hasClass('result')) {
         let index = images.index(e.target);
-        chart.sources[index] = $(ui.draggable).attr('src'); 
+        chart.sources[index] = $(ui.draggable).attr('src');
         chart.titles[index] = $(ui.draggable).attr('title');
         repaintChart();
-      } else if($(ui.draggable).hasClass('tile')) {
+      } else if ($(ui.draggable).hasClass('tile')) {
         e.target.style.opacity = 1;
         dragIndex = -1;
       }
@@ -240,10 +239,10 @@ function generateChart() {
     // Dynamically rearranges chart during hover
     over: (e, ui) => {
       let images = $('#chart img');
-      if($(ui.draggable).hasClass('tile')) {
+      if ($(ui.draggable).hasClass('tile')) {
         // Moves source image into position mouse is hovering over
         // dragIndex is necessary because location of source image changes
-        if(dragIndex === -1) dragIndex = images.index(ui.draggable);
+        if (dragIndex === -1) dragIndex = images.index(ui.draggable);
         let moveto = images.index(e.target);
         let src = chart.sources.splice(dragIndex, 1)[0];
         chart.sources.splice(moveto, 0, src);
@@ -259,8 +258,7 @@ function generateChart() {
     },
     // Removes blank space when not hovering over
     out: (e, ui) => {
-      if($(ui.draggable).hasClass('tile'))
-        e.target.style.opacity = 1;
+      if ($(ui.draggable).hasClass('tile')) e.target.style.opacity = 1;
     }
   });
 
@@ -270,7 +268,10 @@ function generateChart() {
     zIndex: 10,
     helper: 'clone',
     start: (e, ui) => {
-      $(ui.helper).css({width: e.target.offsetWidth, height: e.target.offsetHeight});
+      $(ui.helper).css({
+        width: e.target.offsetWidth,
+        height: e.target.offsetHeight
+      });
     }
   });
 
@@ -301,12 +302,14 @@ function newChart() {
     }
   });
 
-  for(let i = 0; i < 144; i++) {
-    charts[charts.length-1].sources.push('assets/images/blank.png');
-    charts[charts.length-1].titles.push('');
+  for (let i = 0; i < 144; i++) {
+    charts[charts.length - 1].sources.push('assets/images/blank.png');
+    charts[charts.length - 1].titles.push('');
   }
 
-  $(chartItemString(charts[charts.length - 1].name)).insertBefore('#createChart');
+  $(chartItemString(charts[charts.length - 1].name)).insertBefore(
+    '#createChart'
+  );
   loadChart(charts.length - 1);
 }
 
@@ -315,7 +318,7 @@ function newChart() {
  * @param {Number} index
  */
 function loadChart(index) {
-  if(chartIndex > -1) charts[chartIndex] = chart;
+  if (chartIndex > -1) charts[chartIndex] = chart;
   chart = charts[index];
   chartIndex = index;
 
@@ -326,7 +329,7 @@ function loadChart(index) {
   $($('.chart-item').get(chartIndex)).addClass('selected');
   $('.chart-item.selected input[type=checkbox]').prop('checked', true);
 
-  if(chart.options.grid) {
+  if (chart.options.grid) {
     $('#gridRadio').prop('checked', true);
   } else {
     $('#collageRadio').prop('checked', true);
@@ -341,7 +344,7 @@ function loadChart(index) {
   $('#innerPadding').val(chart.options.innerPadding);
 
   $('#titleToggle').prop('checked', chart.options.titles);
-  if(!chart.options.titles) {
+  if (!chart.options.titles) {
     $('#titles').hide();
   }
 
@@ -359,26 +362,31 @@ function loadChart(index) {
  */
 function storeToJSON() {
   charts[chartIndex] = chart;
-  localStorage.setItem('chartStorage', JSON.stringify({ charts, index: chartIndex }));
+  localStorage.setItem(
+    'chartStorage',
+    JSON.stringify({ charts, index: chartIndex })
+  );
 }
 
 /**
  * Download chart data as json file
  */
 function exportToJSON() {
-  let file = new Blob([JSON.stringify(chart)], {type: 'json'});
+  let file = new Blob([JSON.stringify(chart)], { type: 'json' });
   let filename = chart.name.toLowerCase().replace(/\s/g, '-') + '.json';
-  if(window.navigator.msSaveOrOpenBlob) { // Internet Explorer
+  if (window.navigator.msSaveOrOpenBlob) {
+    // Internet Explorer
     window.navigator.msSaveOrOpenBlob(file, filename);
-  } else { // Actual web browsers
-    let a = document.createElement("a")
+  } else {
+    // Actual web browsers
+    let a = document.createElement('a');
     let url = URL.createObjectURL(file);
     a.href = url;
     a.download = filename;
     document.body.appendChild(a);
     a.click();
     document.body.removeChild(a);
-    window.URL.revokeObjectURL(url);  
+    window.URL.revokeObjectURL(url);
   }
 }
 
@@ -386,10 +394,11 @@ function exportToJSON() {
  * Import chart data from file
  */
 function importFromJSON() {
-  fetch(URL.createObjectURL($('#jsonImport').get(0).files[0]),
-  resp => {
+  fetch(URL.createObjectURL($('#jsonImport').get(0).files[0]), (resp) => {
     charts.push(JSON.parse(resp));
-    $(chartItemString(charts[charts.length - 1].name)).insertBefore('#createChart');
+    $(chartItemString(charts[charts.length - 1].name)).insertBefore(
+      '#createChart'
+    );
     loadChart(charts.length - 1);
   });
 }
@@ -398,44 +407,46 @@ function importFromJSON() {
  * Generate chart images from RateYourMusic data
  */
 function importFromRYM() {
-  fetch(URL.createObjectURL($('#csvImport').get(0).files[0]),
-  resp => {
+  fetch(URL.createObjectURL($('#csvImport').get(0).files[0]), (resp) => {
     resp = resp.replace(/""/g, '0');
     resp = resp.replace(
-      'RYM Album, First Name,Last Name,First Name localized, Last Name localized,Title,Release_Date,Rating,Ownership,Purchase Date,Media Type,Review', 
+      'RYM Album, First Name,Last Name,First Name localized, Last Name localized,Title,Release_Date,Rating,Ownership,Purchase Date,Media Type,Review',
       'RYM_Album,First_Name,Last_Name,First_Name_Localized,Last_Name_Localized,Title,Release_Date,Rating,Ownership,Purchase_Date,Media_Type,Review'
     );
     let userData = $.csv.toObjects(resp);
     userData = userData.sort((obj1, obj2) => obj2.Rating - obj1.Rating);
-    let length = 2 * (
-      chart.options.grid 
-      ? chart.options.rows * chart.options.cols 
-      : chart.options.length
-    );
-    for(let i = 0; i < length; i++) {
+    let length =
+      2 *
+      (chart.options.grid
+        ? chart.options.rows * chart.options.cols
+        : chart.options.length);
+    for (let i = 0; i < length; i++) {
       let obj = userData[i];
-      let artist = (obj.First_Name == 0 ? "" : obj.First_Name+" ")+obj.Last_Name;
-      let query = 'release:'+obj.Title+' AND artist:'+artist;
+      let artist =
+        (obj.First_Name == 0 ? '' : obj.First_Name + ' ') + obj.Last_Name;
+      let query = 'release:' + obj.Title + ' AND artist:' + artist;
       window.setTimeout(
-        fetch, 1000 * i,
+        fetch,
+        1000 * i,
         `https://musicbrainz.org/ws/2/release?query=${query}&limit=40?inc=artist-credit&fmt=json`,
-        resp => {
+        (resp) => {
           let release = JSON.parse(resp).releases.find(
-            release => release.title == obj.Title
+            (release) => release.title == obj.Title
           );
-          if(release) {
-            fetch('https://coverartarchive.org/release/' + release['id'],
-            resp => {
-              let index = chart.sources.indexOf('assets/images/blank.png');
-              if(index > -1 && index < 144) {
-                chart.sources[index] = JSON.parse(resp).images
-                  .find(img => img.front)['image']
-                  .replace('http:/', 'https:/')
-                ;
-                chart.titles[index] = artist + ' - ' + obj.Title;
+          if (release) {
+            fetch(
+              'https://coverartarchive.org/release/' + release['id'],
+              (resp) => {
+                let index = chart.sources.indexOf('assets/images/blank.png');
+                if (index > -1 && index < 144) {
+                  chart.sources[index] = JSON.parse(resp)
+                    .images.find((img) => img.front)
+                    ['image'].replace('http:/', 'https:/');
+                  chart.titles[index] = artist + ' - ' + obj.Title;
+                }
+                repaintChart();
               }
-              repaintChart();
-            });
+            );
           }
         }
       );
@@ -448,11 +459,9 @@ function importFromRYM() {
  */
 function importFromImage() {
   let index = chart.sources.indexOf('assets/images/blank.png');
-  chart.sources[index] = 
-    $('#imgImportFileRadio').prop('checked')
+  chart.sources[index] = $('#imgImportFileRadio').prop('checked')
     ? URL.createObjectURL($('#imgImportFile').get(0).files[0])
-    : $('#imgImportURL').val()
-  ;
+    : $('#imgImportURL').val();
   chart.titles[index] = $('#imgTitle').val();
   repaintChart();
 }
@@ -462,7 +471,7 @@ function importFromImage() {
  * @param {Boolean} file - File or URL?
  */
 function imgImportMode(file) {
-  if(file) {
+  if (file) {
     $('#imgImportFileDiv').show();
     $('#imgImportURLDiv').hide();
   } else {
@@ -476,16 +485,17 @@ function imgImportMode(file) {
  * @param {Boolean} grid
  */
 function chartType(grid) {
-  if(grid) {
-    $('#chartContainer').css({width: (
-      chart.options.titles ? 100
-      : Math.min(100, 40 + 10 * chart.options.cols)
-      ) + '%'
+  if (grid) {
+    $('#chartContainer').css({
+      width:
+        (chart.options.titles
+          ? 100
+          : Math.min(100, 40 + 10 * chart.options.cols)) + '%'
     });
     $('#chartSize').show();
     $('#chartLength').hide();
   } else {
-    $('#chartContainer').css({width: '100%'});
+    $('#chartContainer').css({ width: '100%' });
     $('#chartSize').hide();
     $('#chartLength').show();
   }
@@ -520,8 +530,12 @@ function chartLength() {
 function outerPadding() {
   let padding = $('#outerPadding').val();
   chart.options.outerPadding = padding;
-  $('#chart').css({padding: padding * 2});
-  $('#titles').css({paddingTop: padding * 2, paddingBottom: padding * 2, paddingRight: padding * 2});
+  $('#chart').css({ padding: padding * 2 });
+  $('#titles').css({
+    paddingTop: padding * 2,
+    paddingBottom: padding * 2,
+    paddingRight: padding * 2
+  });
   $('#outerPaddingNum').html(padding);
 }
 
@@ -531,7 +545,7 @@ function outerPadding() {
 function innerPadding() {
   let padding = $('#innerPadding').val();
   chart.options.innerPadding = padding;
-  $('#chart img').css({padding: padding});
+  $('#chart img').css({ padding: padding });
   $('#innerPaddingNum').html(padding);
 }
 
@@ -541,11 +555,12 @@ function innerPadding() {
 function titleToggle() {
   $('#titles').toggle();
   chart.options.titles = !chart.options.titles;
-  if(chart.options.grid) {
-    if(chart.options.titles)
-      $('#chartContainer').css({width: '100%'});
+  if (chart.options.grid) {
+    if (chart.options.titles) $('#chartContainer').css({ width: '100%' });
     else
-      $('#chartContainer').css({width: Math.min(100, 40 + 10 * chart.options.cols) + '%'});
+      $('#chartContainer').css({
+        width: Math.min(100, 40 + 10 * chart.options.cols) + '%'
+      });
   }
   resize();
   storeToJSON();
@@ -565,7 +580,7 @@ function changeFont() {
  */
 function background() {
   let val = $('#background').val().toLowerCase();
-  if(val.includes('http') || val.includes('www')) {
+  if (val.includes('http') || val.includes('www')) {
     val = 'url(' + val + ')';
   }
   chart.options.background = val;
@@ -616,17 +631,19 @@ function chartItemString(name) {
 }
 
 /**
- * Change name of selected chart 
+ * Change name of selected chart
  */
 function renameChart(e) {
-  $(e.target).siblings('input[type=text]')
-  .removeAttr('disabled').focus()
-  .on('focusout change', e => {
-    let input = e.target;
-    $(input).attr('disabled', true);
-    charts[$('.chart-item').index($(input).parent())].name = $(input).val();
-    storeToJSON();
-  });
+  $(e.target)
+    .siblings('input[type=text]')
+    .removeAttr('disabled')
+    .focus()
+    .on('focusout change', (e) => {
+      let input = e.target;
+      $(input).attr('disabled', true);
+      charts[$('.chart-item').index($(input).parent())].name = $(input).val();
+      storeToJSON();
+    });
 }
 
 /**
@@ -636,8 +653,8 @@ function deleteChart(e) {
   let div = $(e.target).parent();
   let index = $('.chart-item').index(div);
   charts.splice(index, 1);
-  if(charts.length > 0) {
-    loadChart(Math.min(chartIndex, charts.length-1));
+  if (charts.length > 0) {
+    loadChart(Math.min(chartIndex, charts.length - 1));
   } else {
     chartIndex = -1;
     $('#createChart').click();
@@ -658,10 +675,10 @@ function selectChart(e) {
 $(() => {
   let data = JSON.parse(localStorage.getItem('chartStorage'));
 
-  if(data) {
+  if (data) {
     charts = data.charts;
     let innerHTML = '';
-    charts.forEach(item => {
+    charts.forEach((item) => {
       innerHTML += chartItemString(item.name);
     });
     $('#chartList').prepend(innerHTML);

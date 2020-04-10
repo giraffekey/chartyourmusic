@@ -3,58 +3,58 @@
  */
 
 #chartContainer {
-    background-color: black;
-    border: 1px solid white;
+  background-color: black;
+  border: 1px solid white;
 }
 
 #chart {
-    margin: 0 auto;
+  margin: 0 auto;
 }
 
 .tile-2 {
-    width: 100% * (1/6);
+  width: 100% * (1/6);
 }
 
 .tile-3 {
-    width: 100% * (1/10);
+  width: 100% * (1/10);
 }
 
 .tile-4 {
-    width: 100% * (1/14);
+  width: 100% * (1/14);
 }
 
 #titles {
-    display: flex;
-    flex-direction: column;
-    font-size: 0.8em;
+  display: flex;
+  flex-direction: column;
+  font-size: 0.8em;
 }
 
 .title {
-    background: transparent;
-    border: none;
-    color: white;
-    overflow: visible;
+  background: transparent;
+  border: none;
+  color: white;
+  overflow: visible;
 }
 
 #chartList {
-    max-height: 25vh;
+  max-height: 25vh;
 }
 
 .chart-item {
-    background-color: white;
+  background-color: white;
+  color: black;
+  margin-bottom: 15px;
+  padding: 15px;
+  input:disabled {
+    background: transparent;
+    border: none;
     color: black;
-    margin-bottom: 15px;
-    padding: 15px;
-    input:disabled {
-        background: transparent;
-        border: none;
-        color: black;
-    }
-    &:last-child {
-        margin-bottom: 0;
-    }
+  }
+  &:last-child {
+    margin-bottom: 0;
+  }
 }
 
-input[type=image] {
-    width: 20px;
+input[type='image'] {
+  width: 20px;
 }
